@@ -1,12 +1,12 @@
 <template>
   <div id="app" class="fillcontain">
+    开始
     <router-view></router-view>
   </div>
 </template>
 
 <script>
   export default {
-
   };
 </script>
 
