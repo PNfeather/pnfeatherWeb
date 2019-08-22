@@ -3,50 +3,17 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
-// const index = r => require.ensure([], () => r(require('@/page/index/index')), 'index');
-// const ios = r => require.ensure([], () => r(require('@/page/download/ios')), 'ios');
-// const android = r => require.ensure([], () => r(require('@/page/download/android')), 'android');
-// const teacherDownload = r => require.ensure([], () => r(require('@/page/teacherDownload/download')), 'download');
-// const login = r => require.ensure([], () => r(require('@/page/login/login')), 'login');
-// const manage = r => require.ensure([], () => r(require('@/page/manage/manage')), 'manage');
-// const home = r => require.ensure([], () => r(require('@/page/home/home')), 'home');
-// const teachers = r => require.ensure([], () => r(require('@/page/account/teachers')), 'teachers');
-// const patriarch = r => require.ensure([], () => r(require('@/page/account/patriarch')), 'patriarch');
-// const students = r => require.ensure([], () => r(require('@/page/account/students')), 'students');
-// const service = r => require.ensure([], () => r(require('@/page/account/service')), 'service');
-// const classList = r => require.ensure([], () => r(require('@/page/schoolClass/classList')), 'classList');
-// const resourceList = r => require.ensure([], () => r(require('@/page/resource/resourceList')), 'resourceList');
-// const resourceDetail = r => require.ensure([], () => r(require('@/page/resource/resourceDetail')), 'resourceDetail');
-// const schoolDictionary = r => require.ensure([], () => r(require('@/page/dictionary/schoolDictionary')), 'schoolDictionary');
-// const tickling = r => require.ensure([], () => r(require('@/page/tickling/tickling')), 'tickling');
-// const ticklingDetail = r => require.ensure([], () => r(require('@/page/tickling/ticklingDetail')), 'ticklingDetail');
-// const appManage = r => require.ensure([], () => r(require('@/page/appManage/appManage')), 'appManage');
+const login = r => require.ensure([], () => r(require('@P/login/login')), 'login');
 
 const routes = [
-  // {
-  //   path: '*',
-  //   redirect: '/'
-  // },
-  // {
-  //   path: '/',
-  //   component: index
-  // },
-  // {
-  //   path: '/ios-download',
-  //   component: ios
-  // },
-  // {
-  //   path: '/android-download',
-  //   component: android
-  // },
-  // {
-  //   path: '/share-url',
-  //   component: teacherDownload
-  // },
-  // {
-  //   path: '/login',
-  //   component: login
-  // },
+  {
+    path: '*',
+    redirect: '/login'
+  },
+  {
+    path: '/',
+    component: login
+  }
   // {
   //   path: '/manage',
   //   component: manage,
