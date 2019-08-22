@@ -8,7 +8,7 @@ const login = r => require.ensure([], () => r(require('@P/login/login')), 'login
 const routes = [
   {
     path: '*',
-    redirect: '/login'
+    redirect: '/'
   },
   {
     path: '/',

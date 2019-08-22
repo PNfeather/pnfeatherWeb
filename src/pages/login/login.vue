@@ -7,10 +7,10 @@
         </div>
         <el-form :model="loginForm" :rules="rules" ref="loginForm">
           <el-form-item prop="account">
-            <el-input v-model="loginForm.account" placeholder="账号" @keyup.native="accountKeyDown($event)"></el-input>
+            <el-input v-model="loginForm.account" placeholder="账号" @keyup.13.native="accountKeyDown($event)"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input type="password" placeholder="密码" v-model="loginForm.password" ref="pwd" @keyup.native="pwdKeyDown($event)"></el-input>
+            <el-input type="password" placeholder="密码" v-model="loginForm.password" ref="pwd" @keyup.13.native="pwdKeyDown($event)"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm()" class="submit_btn">登录</el-button>
@@ -28,8 +28,8 @@
     data () {
       return {
         loginForm: {
-          account: '',
-          password: ''
+          account: 'admin',
+          password: '123456'
         },
         rules: {
           account: [
@@ -46,15 +46,11 @@
       this.showLogin = true;
     },
     methods: {
-      accountKeyDown (e) {
-        if (e.keyCode == 13) { // 账号回车跳密码
-          this.$refs.pwd.$el.firstElementChild.focus();
-        }
+      accountKeyDown () {
+        this.$refs.pwd.$el.firstElementChild.focus();
       },
-      pwdKeyDown (e) {
-        if (e.keyCode == 13) { // 密码回车登录
-          this.submitForm();
-        }
+      pwdKeyDown () {
+        this.submitForm();
       },
       submitForm () {
         this.$refs.loginForm.validate((valid) => {
