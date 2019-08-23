@@ -6,8 +6,8 @@
           <p>PNfeahter</p>
         </div>
         <el-form :model="loginForm" :rules="rules" ref="loginForm">
-          <el-form-item prop="account">
-            <el-input v-model="loginForm.account" placeholder="账号" @keyup.13.native="accountKeyDown($event)"></el-input>
+          <el-form-item prop="username">
+            <el-input v-model="loginForm.username" placeholder="账号" @keyup.13.native="usernameKeyDown($event)"></el-input>
           </el-form-item>
           <el-form-item prop="password">
             <el-input type="password" placeholder="密码" v-model="loginForm.password" ref="pwd" @keyup.13.native="pwdKeyDown($event)"></el-input>
@@ -28,11 +28,11 @@
     data () {
       return {
         loginForm: {
-          account: 'admin',
+          username: 'admin',
           password: '123456'
         },
         rules: {
-          account: [
+          username: [
             { required: true, message: '请输入账号', trigger: 'blur' }
           ],
           password: [
@@ -46,7 +46,7 @@
       this.showLogin = true;
     },
     methods: {
-      accountKeyDown () {
+      usernameKeyDown () {
         this.$refs.pwd.$el.firstElementChild.focus();
       },
       pwdKeyDown () {
@@ -55,22 +55,22 @@
       submitForm () {
         this.$refs.loginForm.validate((valid) => {
           if (valid) {
-            login({account: this.loginForm.account, password: this.loginForm.password}).then((res) => {
+            login({username: this.loginForm.username, password: this.loginForm.password}).then((res) => {
               let data = res.data;
               if (data.code == '0') {
                 this.$message({
                   type: 'success',
                   message: '登录成功'
                 });
-                if (this.$route.query.autoBack) {
-                  this.$router.go(-1);
-                } else {
-                  this.$router.push('manage');
-                }
+                // if (this.$route.query.autoBack) {
+                //   this.$router.go(-1);
+                // } else {
+                //   this.$router.push('manage');
+                // }
               } else {
                 this.$message({
                   type: 'error',
-                  message: data.message
+                  message: data.msg
                 });
               }
             });
