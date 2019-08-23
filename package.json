@@ -12,7 +12,7 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --fix --ext .js,.vue src test/unit test/e2e/specs",
     "add_commit_push": "git go '指令快速提交代码'",
-    "build": "node build/build.js",
+    "build": "cross-env env_config=dev node build/build.js",
     "zip": "zip -q -r -o dist.zip dist",
     "build-pro": "cross-env env_config=prod node build/build.js"
   },
