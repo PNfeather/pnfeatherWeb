@@ -36,6 +36,7 @@
           let data = res.data;
           if (data.code == 0) {
             this.$router.push('login');
+            this.$message.success(data.msg);
           } else {
             this.$message.error(data.msg);
           }
