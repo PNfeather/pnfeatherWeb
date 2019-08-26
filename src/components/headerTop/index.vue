@@ -13,15 +13,16 @@
         list: [
           {
             id: '1',
-            value: '首页'
+            value: '首页',
+            clickMethod: 'jump-home'
           }, {
             id: '2',
-            value: '登出',
-            clickMethod: 'logout'
+            value: '经历',
+            clickMethod: 'jump-experience'
           }, {
             id: '3',
-            value: '登出',
-            clickMethod: 'logout'
+            value: '收藏',
+            clickMethod: 'jump-collect'
           }, {
             id: '4',
             value: '登出',
@@ -36,10 +37,16 @@
     watch: {},
     methods: {
       redirect (method) {
-        this[method]();
+        let methodArr = method.split('-');
+        let methodType = methodArr[0];
+        let methodParams = methodArr[1];
+        this[methodType](methodParams);
+      },
+      jump (path) {
+        let currentPath = this.$route.fullPath.replace('/', '');
+        path != currentPath && this.$router.push(path);
       },
       logout () {
-        console.log('登出');
         logout().then(res => {
           let data = res.data;
           if (data.code == 0) {
@@ -59,18 +66,23 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   [name = 'headerTop']{
-    .wh(100%, 1.6rem);
+    position: absolute;
+    left: 50%;
+    top: .4rem;
+    transform: translateX(-50%);
+    .wh(80%, 1.2rem);
     font-size: .8rem;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background: linear-gradient(#555, #999);
+    max-height: 44px;
     .header_item{
       flex: 4.8rem 0 0;
+      font-size: .7rem;
       display: flex;
-      height: 1.2rem;
+      height: 100%;
       justify-content: center;
-      align-content: center;
+      align-items: center;
       background: url("~@IMG/btn.png") center no-repeat;
       background-size: 100% 100%;
     }
