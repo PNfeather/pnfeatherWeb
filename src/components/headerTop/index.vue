@@ -18,6 +18,14 @@
             id: '2',
             value: '登出',
             clickMethod: 'logout'
+          }, {
+            id: '3',
+            value: '登出',
+            clickMethod: 'logout'
+          }, {
+            id: '4',
+            value: '登出',
+            clickMethod: 'logout'
           }
         ]
       };
@@ -51,14 +59,20 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   [name = 'headerTop']{
-    .wh(500px, 60px);
+    .wh(100%, 1.6rem);
+    font-size: .8rem;
     display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: linear-gradient(#555, #999);
     .header_item{
-      flex: 1;
+      flex: 4.8rem 0 0;
       display: flex;
-      height: 100%;
+      height: 1.2rem;
       justify-content: center;
       align-content: center;
+      background: url("~@IMG/btn.png") center no-repeat;
+      background-size: 100% 100%;
     }
   }
 </style>

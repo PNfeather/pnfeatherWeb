@@ -90,7 +90,9 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   .login_page{
-    background-color: #324057;
+    background: url("~@IMG/background.png") center no-repeat;
+    background-size: cover;
+    background-color: #222;
   }
   .manage_tip{
     position: absolute;
