@@ -38,7 +38,7 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   [name = 'home']{
-    background: url("~@IMG/background-home.jpg") center no-repeat;
+    background: url("~@IMG/china-background2.jpeg") center no-repeat;
     background-size: cover;
     background-color: #222;
     .main_content{
@@ -46,7 +46,7 @@
       overflow: hidden;
       .wh(28rem, 78%);
       position: absolute;
-      top: 2rem;
+      top: 3rem;
       left: 50%;
       transform: translateX(-50%);
       .main_content_border{
@@ -73,6 +73,6 @@
     transition: all .5s;
   }
   .form-fade-enter, .form-fade-leave-active {
-    transform: translate3d(0, -90%, 0);
+    transform: translate3d(-90%, 0, 0);
   }
 </style>

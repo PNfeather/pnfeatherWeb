@@ -1,6 +1,6 @@
 <template>
   <div name='headerTop'>
-    <div class="header_item" @click="redirect(item.clickMethod)" v-for="item in list" :key="item.id">{{item.value}}</div>
+    <div class="header_item" :class="{header_item_active: isActive(item.clickMethod)}" @click="redirect(item.clickMethod)" v-for="item in list" :key="item.id">{{item.value}}</div>
   </div>
 </template>
 
@@ -32,9 +32,19 @@
       };
     },
     created () {},
-    mounted () {},
-    computed: {},
-    watch: {},
+    mounted () {
+    },
+    computed: {
+      isActive () {
+        return (param) => {
+          let active = false;
+          if (~param.indexOf('-')) {
+            this.$route.path.replace('/', '') == param.split('-')[1] && (active = true);
+          }
+          return active;
+        };
+      }
+    },
     methods: {
       redirect (method) {
         let methodArr = method.split('-');
@@ -50,7 +60,7 @@
         logout().then(res => {
           let data = res.data;
           if (data.code == 0) {
-            this.$router.push('login');
+            this.$router.push({path: 'login', query: {autoBack: true}});
             this.$message.success(data.msg);
           } else {
             this.$message.error(data.msg);
@@ -59,8 +69,7 @@
           this.$message.error(err);
         });
       }
-    },
-    components: {}
+    }
   };
 </script>
 <style scoped lang="less">
@@ -76,15 +85,23 @@
     justify-content: space-around;
     align-items: center;
     max-height: 44px;
+    .header_item_active{
+      color: #26649D!important;
+    }
     .header_item{
-      flex: 4.8rem 0 0;
-      font-size: .7rem;
+      color: #000;
+      flex: 3.2rem 0 0;
+      font-size: .6rem;
       display: flex;
       height: 100%;
       justify-content: center;
+      box-sizing: border-box;
       align-items: center;
-      background: url("~@IMG/btn.png") center no-repeat;
+      background: url("~@IMG/btn2.png") center no-repeat;
       background-size: 100% 100%;
+      &:hover{
+        transform: scale(1.2, 1.2);
+      }
     }
   }
 </style>

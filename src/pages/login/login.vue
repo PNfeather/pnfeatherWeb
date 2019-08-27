@@ -91,7 +91,7 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   .login_page{
-    background: url("~@IMG/background.png") center no-repeat;
+    background: url("~@IMG/china-background1.jpg") center no-repeat;
     background-size: cover;
     background-color: #222;
   }
@@ -102,7 +102,7 @@
     left: 0;
     p{
       font-size: 34px;
-      color: #fff;
+      color: #000;
     }
   }
   .form_contianer{
