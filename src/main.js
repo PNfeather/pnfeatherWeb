@@ -20,7 +20,7 @@ Vue.component(HeaderTop.name, HeaderTop);
 const resizeHandler = () => {
   let html = document.documentElement;
   let clientWidth = html.clientWidth;
-  let size = 50 * clientWidth / 1920 ;
+  let size = 50 * clientWidth / 1920;
   html.style.fontSize = (size >= 30 ? size : 30) + 'px';
 };
 
