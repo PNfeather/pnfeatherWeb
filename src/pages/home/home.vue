@@ -45,6 +45,7 @@
       color: #f1f1f1;
       overflow: hidden;
       .wh(28rem, 78%);
+      min-height: 550px;
       position: absolute;
       top: 3rem;
       left: 50%;

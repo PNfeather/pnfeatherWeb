@@ -79,7 +79,7 @@
     left: 50%;
     top: .8rem;
     transform: translateX(-50%);
-    .wh(80%, 1.2rem);
+    .wh(28rem, 1.2rem);
     font-size: .8rem;
     display: flex;
     justify-content: space-around;

@@ -2,6 +2,7 @@
   <div name='collect'>
     <section class="btn_group">
       <div class="btn">
+        <img class="icon" src="@IMG/collect_icon.png" alt="">
         添加收藏
       </div>
     </section>
@@ -44,14 +45,23 @@
         flex: 4.2rem 0 0;
         height: 100%;
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
         align-items: center;
-        background: url("~@IMG/btn.png") center no-repeat;
-        background-size: 100% 100%;
-        color: #333;
-        text-align: right;
-        box-sizing: border-box;
-        padding-right: .5rem;
+        color: #999;
+        font-size: .6rem;
+        border-radius: .4rem;
+        background: rgba(0, 0, 0, 0.2);
+        &:hover{
+          text-decoration: underline;
+          color: #fff!important;
+          .icon{
+            transform: scale(1.2, 1.2);
+          }
+        }
+        .icon{
+          .wh(.7rem, .7rem);
+          margin-right: .2rem;
+        }
       }
     }
   }
