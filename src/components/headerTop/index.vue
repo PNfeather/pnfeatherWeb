@@ -68,7 +68,7 @@
   [name = 'headerTop']{
     position: absolute;
     left: 50%;
-    top: .4rem;
+    top: .8rem;
     transform: translateX(-50%);
     .wh(80%, 1.2rem);
     font-size: .8rem;

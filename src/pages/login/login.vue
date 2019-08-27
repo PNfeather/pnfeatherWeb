@@ -28,8 +28,8 @@
     data () {
       return {
         loginForm: {
-          username: 'admin',
-          password: '123456'
+          username: 'PNfeather',
+          password: 'abcdef'
         },
         rules: {
           username: [
@@ -62,6 +62,7 @@
                   type: 'success',
                   message: '登录成功'
                 });
+                this.$store.dispatch('changeUserLevel', data.data.level);
                 if (this.$route.query.autoBack) {
                   this.$router.go(-1);
                 } else {

@@ -1,6 +1,4 @@
 const getters = {
-  templateHeight: state => state.template.templateHeight,
-  templateWidth: state => state.template.templateWidth,
-  imgScale: state => state.template.imgScale
+  userLevel: state => state.userLevel
 };
 export default getters;

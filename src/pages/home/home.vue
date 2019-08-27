@@ -4,7 +4,7 @@
     <section class="main_content">
       <transition name="form-fade" mode="in-out">
         <div class="main_content_border" v-show="showContent">
-          <div class="assist_div" v-show="showContent">
+          <div class="main_content_border_wrapper" v-show="showContent">
             <keep-alive>
               <router-view></router-view>
             </keep-alive>
@@ -50,13 +50,22 @@
       left: 50%;
       transform: translateX(-50%);
       .main_content_border{
-        background: url("~@IMG/background.png") center no-repeat;
+        background: url("~@IMG/background-home.png") center no-repeat;
         background-size: cover;
         background-color: #222;
         .wh(100%, 100%);
         position: absolute;
         left: 0;
         top: 0;
+        padding: .4rem;
+        border-radius: .3rem;
+        box-sizing: border-box;
+        .main_content_border_wrapper{
+          background: rgba(255, 255, 255, 0.2);
+          box-sizing: border-box;
+          padding: .4rem;
+          .wh(100%, 100%)
+        }
       }
     }
   }
