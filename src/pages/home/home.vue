@@ -41,23 +41,18 @@
     background: url("~@IMG/china-background2.jpeg") center no-repeat;
     background-size: cover;
     background-color: #222;
+    padding-top: .8rem;
     .main_content{
       color: #f1f1f1;
       overflow: hidden;
       .wh(28rem, 78%);
       min-height: 550px;
-      position: absolute;
-      top: 3rem;
-      left: 50%;
-      transform: translateX(-50%);
+      margin: .8rem auto;
       .main_content_border{
         background: url("~@IMG/background-home.png") center no-repeat;
         background-size: cover;
         background-color: #222;
         .wh(100%, 100%);
-        position: absolute;
-        left: 0;
-        top: 0;
         padding: .4rem;
         border-radius: .3rem;
         box-sizing: border-box;

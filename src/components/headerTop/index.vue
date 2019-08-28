@@ -75,10 +75,7 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   [name = 'headerTop']{
-    position: absolute;
-    left: 50%;
-    top: .8rem;
-    transform: translateX(-50%);
+    margin: 0 auto;
     .wh(28rem, 1.2rem);
     font-size: .8rem;
     display: flex;
