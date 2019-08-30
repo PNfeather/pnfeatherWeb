@@ -15,9 +15,12 @@
         <el-form-item label="收藏名称">
           <el-input v-model="form.name" placeholder="请输入收藏名称"></el-input>
         </el-form-item>
+        <el-form-item label="收藏地址">
+          <el-input v-model="form.address" placeholder="请输入收藏地址"></el-input>
+        </el-form-item>
         <el-form-item label="收藏分类">
-          <el-select v-model="form.classify" placeholder="请选择收藏分类" ref="classifySelect">
-            <el-option :label="item.value" :value="item.value" v-for="(item, index) in form.classifyList" :key="index">
+          <el-select v-model="form.classifyType" placeholder="请选择收藏分类" ref="classifySelect" @change="getClassify">
+            <el-option :label="item.value" :value="item.key" v-for="(item, index) in classifyList" :key="index">
               <span style="float: left">{{ item.value }}</span>
               <span
                 @click.stop="deleteClassify(item, index)"
@@ -29,8 +32,10 @@
           <el-button type="primary" @click="addClassifyToggle = true">添加新分类</el-button>
         </el-form-item>
         <el-form-item label="分类名称" v-show="addClassifyToggle">
-          <el-input style="width: 60%" v-model="newClassify" placeholder="请输入新的分类名称"></el-input>
+          <el-input style="width: 30%" v-model="newClassifyName" placeholder="请输入新的分类名称"></el-input>
+          <el-input style="width: 30%" v-model="newClassifyKey" placeholder="请输入新的分类key值"></el-input>
           <el-button type="primary" @click="sureAddClassify">确认</el-button>
+          <el-button @click="addClassifyToggle = false">取消</el-button>
         </el-form-item>
         <el-form-item label="收藏时间">
           <el-col :span="11">
@@ -51,23 +56,24 @@
 
 <script type='text/babel'>
   import format from '@/tools/format';
-  import { getClassifyList, addClassify, deleteClassify } from '@/api/collect';
+  import timeLimit from '@/tools/timeLimit';
+  import { getClassifyList, addClassify, deleteClassify, addCollection } from '@/api/collect';
   export default {
     name: 'collect',
     data () {
       return {
         addCollectionToggle: false,
         addClassifyToggle: false,
-        newClassify: '',
+        newClassifyName: '',
+        newClassifyKey: '',
+        classifyList: [],
         form: {
           name: '',
+          address: '',
           classify: '',
-          classifyList: [],
+          classifyType: '',
           time: '',
           desc: ''
-        },
-        form2: {
-          name: ''
         }
       };
     },
@@ -80,12 +86,17 @@
         this.form.time = time;
         this.getClassifyList();
       },
+      getClassify (key) {
+        this.classifyList.forEach(item => {
+          item.key == key && (this.form.classify = item.value);
+        });
+      },
       getClassifyList () {
         getClassifyList().then(res => {
           let data = res.data;
           if (data.code == 0) {
             let reData = data.data;
-            this.form.classifyList = [...reData];
+            this.classifyList = [...reData];
           } else {
             this.$message.error('获取分类列表失败');
           }
@@ -95,7 +106,7 @@
       },
       deleteClassify (item, index) {
         this.$confirm('是否确认删除当前分类', '确认信息').then(() => {
-          this.form.classifyList.splice(index, 1);
+          this.classifyList.splice(index, 1);
           deleteClassify({id: item._id}).then(res => {
             let data = res.data;
             if (data.code == 0) {
@@ -112,13 +123,41 @@
         });
       },
       sureAddClassify () {
-        addClassify({value: this.newClassify}).then(res => {
+        if (this.newClassifyName === '' || this.newClassifyName === '') {
+          return timeLimit(() => {
+            this.$message.error('类型及其key不能为空');
+          }, 2000);
+        } else {
+          addClassify({value: this.newClassifyName, key: this.newClassifyKey}).then(res => {
+            let data = res.data;
+            if (data.code == 0) {
+              this.getClassifyList();
+              this.form.classify = this.newClassifyName;
+              this.form.classifyType = this.newClassifyKey;
+              this.newClassifyName = '';
+              this.newClassifyKey = '';
+              this.addClassifyToggle = false;
+              this.$message.success(data.msg);
+            } else {
+              this.$message.error(data.msg);
+            }
+          }).catch((err) => {
+            this.$message.error(err);
+          });
+        }
+      },
+      onSubmit () {
+        addCollection(this.form).then(res => {
           let data = res.data;
           if (data.code == 0) {
-            this.getClassifyList();
-            this.form.classify = this.newClassify;
-            this.newClassify = '';
-            this.addClassifyToggle = false;
+            this.addCollectionToggle = false;
+            Object.assign(this.form, {
+              name: '',
+              address: '',
+              classify: '',
+              classifyType: '',
+              desc: ''
+            });
             this.$message.success(data.msg);
           } else {
             this.$message.error(data.msg);
@@ -126,10 +165,6 @@
         }).catch((err) => {
           this.$message.error(err);
         });
-      },
-      onSubmit () {
-        console.log('submit!');
-        this.addCollectionToggle = false;
       }
     }
   };

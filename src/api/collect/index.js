@@ -6,3 +6,5 @@ export const getClassifyList = () => Http.get('/collect/classifyList');
 export const addClassify = (data) => Http.post('/collect/addClassify', data);
 // 删除收藏分类
 export const deleteClassify = (data) => Http.post('/collect/deleteClassify', data);
+// 添加收藏
+export const addCollection = (data) => Http.post('/collect/addCollection', data);
