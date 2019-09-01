@@ -8,3 +8,5 @@ export const addClassify = (data) => Http.post('/collect/addClassify', data);
 export const deleteClassify = (data) => Http.post('/collect/deleteClassify', data);
 // 添加收藏
 export const addCollection = (data) => Http.post('/collect/addCollection', data);
+// 获取收藏列表
+export const getCollectionList = () => Http.get('/collect/collectionList');

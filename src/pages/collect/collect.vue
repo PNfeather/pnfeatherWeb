@@ -6,6 +6,14 @@
         添加收藏
       </div>
     </section>
+    <section class="collection">
+      <div class="collection_classify" v-for="item in collection" :key="item.key">
+        <div class="collection_classify_name">{{item.title}}</div>
+        <div class="collection_item" v-for="(child, index) in item.list" :key="index">
+          <div>{{child.name}}</div>
+        </div>
+      </div>
+    </section>
     <el-dialog
       title="添加收藏"
       :visible.sync="addCollectionToggle"
@@ -19,7 +27,7 @@
           <el-input v-model="form.address" placeholder="请输入收藏地址"></el-input>
         </el-form-item>
         <el-form-item label="收藏分类">
-          <el-select v-model="form.classifyType" placeholder="请选择收藏分类" ref="classifySelect" @change="getClassify">
+          <el-select v-model="form.classifyType" placeholder="请选择收藏分类" ref="classifySelect" @change="handlerClassify">
             <el-option :label="item.value" :value="item.key" v-for="(item, index) in classifyList" :key="index">
               <span style="float: left">{{ item.value }}</span>
               <span
@@ -57,7 +65,7 @@
 <script type='text/babel'>
   import format from '@/tools/format';
   import timeLimit from '@/tools/timeLimit';
-  import { getClassifyList, addClassify, deleteClassify, addCollection } from '@/api/collect';
+  import { getClassifyList, addClassify, deleteClassify, addCollection, getCollectionList } from '@/api/collect';
   export default {
     name: 'collect',
     data () {
@@ -67,6 +75,7 @@
         newClassifyName: '',
         newClassifyKey: '',
         classifyList: [],
+        collection: [],
         form: {
           name: '',
           address: '',
@@ -85,10 +94,44 @@
         const time = format(new Date(), 'YYYY-MM-DD');
         this.form.time = time;
         this.getClassifyList();
+        this.getCollectionList();
       },
-      getClassify (key) {
+      handlerClassify (key) {
         this.classifyList.forEach(item => {
           item.key == key && (this.form.classify = item.value);
+        });
+      },
+      groupCollection (data) { // 分类组装数据
+        let dataCatch = {};
+        let result = [];
+        data.forEach(item => {
+          if (dataCatch[item.classifyType]) {
+            dataCatch[item.classifyType].list.push(item);
+          } else {
+            dataCatch[item.classifyType] = {
+              title: item.classify,
+              key: item.classifyType,
+              list: [item]
+            };
+          }
+        });
+        const keys = Object.keys(dataCatch);
+        for (let i in keys) {
+          result.push(dataCatch[keys[i]]);
+        }
+        this.collection = [...result];
+      },
+      getCollectionList () {
+        getCollectionList().then(res => {
+          let data = res.data;
+          if (data.code == 0) {
+            let reData = data.data;
+            this.groupCollection(reData);
+          } else {
+            this.$message.error(data.msg);
+          }
+        }).catch((err) => {
+          this.$message.error(err);
         });
       },
       getClassifyList () {
@@ -174,7 +217,6 @@
   [name = 'collect']{
     position: relative;
     .wh(100%, 100%);
-    overflow: auto;
     .btn_group{
       position: absolute;
       right: 0;
@@ -207,6 +249,10 @@
           margin-right: .2rem;
         }
       }
+    }
+    .collection{
+      .wh(100%, 100%);
+      overflow: auto;
     }
   }
 </style>
