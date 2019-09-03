@@ -9,8 +9,17 @@
     <section class="collection">
       <div class="collection_classify" v-for="item in collection" :key="item.key">
         <div class="collection_classify_name">{{item.title}}</div>
-        <div class="collection_item" v-for="(child, index) in item.list" :key="index">
-          <div>{{child.name}}</div>
+        <div class="collection_list">
+          <div class="collection_item" :class="{'collection_openDetail_item': child.detailOpen}" v-for="(child, index) in item.list" :key="index">
+            <div class="collection_item_name" @mouseenter="handlerDetailBtn(child, true)" @mouseleave="handlerDetailBtn(child, false)">
+              <span class="name" @click="openCollection(child.address)">{{child.name}}</span>
+              <span class="checkDetail" @click="handlerDetailOpen(child)" v-show="child.showDetailBtn || child.detailOpen">{{child.detailOpen ? '收起' : '详情'}}</span>
+            </div>
+            <div class="collection_item_detail" v-show="child.detailOpen">
+              <div class="time">收藏时间：{{child.time}}</div>
+              <div class="desc">收藏说明：{{child.desc}}</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -208,6 +217,17 @@
         }).catch((err) => {
           this.$message.error(err);
         });
+      },
+      handlerDetailBtn (child, val) {
+        this.$set(child, 'showDetailBtn', val);
+      },
+      handlerDetailOpen (child) {
+        this.$set(child, 'detailOpen', !child.detailOpen);
+      },
+      openCollection (address) {
+        if (address.indexOf('https://') || address.indexOf('http://')) {
+          window.open(address);
+        }
       }
     }
   };
@@ -237,6 +257,7 @@
         font-size: .6rem;
         border-radius: .4rem;
         background: rgba(0, 0, 0, 0.2);
+        cursor: pointer;
         &:hover{
           text-decoration: underline;
           color: #fff!important;
@@ -253,6 +274,58 @@
     .collection{
       .wh(100%, 100%);
       overflow: auto;
+      .collection_classify{
+        font-size: .9rem;
+        color: #111;
+        padding: .2rem .4rem;
+        margin-bottom: .4rem;
+        .collection_classify_name{
+          display: inline-block;
+          cursor: pointer;
+        }
+        .collection_list{
+          padding: .2rem .6rem;
+          .collection_openDetail_item{
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: .2rem;
+            color: #fff!important;
+            padding: .4rem!important;
+          }
+          .collection_item{
+            font-size: .6rem;
+            color: #444;
+            margin-bottom: .1rem;
+            .collection_item_name{
+              .name{
+                cursor: pointer;
+                margin-right: .5rem;
+                &:hover{
+                  color: #3190e8;
+                  text-decoration: underline;
+                }
+              }
+              .checkDetail{
+                cursor: pointer;
+                font-size: .5rem;
+                background: rgba(255, 255, 255, 0.2);
+                padding: .1rem .2rem;
+                border-radius: .2rem;
+                &:hover{
+                  color: #3190e8;
+                  text-decoration: underline;
+                }
+              }
+            }
+            .collection_item_detail{
+              margin-top: .3rem;
+              border-top: 1px solid #fff;
+              .time, .desc{
+                margin-top: .2rem;
+              }
+            }
+          }
+        }
+      }
     }
   }
 </style>

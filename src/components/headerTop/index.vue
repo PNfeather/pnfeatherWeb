@@ -96,6 +96,7 @@
       align-items: center;
       background: url("~@IMG/btn2.png") center no-repeat;
       background-size: 100% 100%;
+      cursor: pointer;
       &:hover{
         transform: scale(1.2, 1.2);
       }

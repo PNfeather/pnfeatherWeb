@@ -43,7 +43,7 @@
     background-color: #222;
     padding-top: .8rem;
     .main_content{
-      color: #f1f1f1;
+      color: #222;
       overflow: hidden;
       .wh(28rem, 78%);
       min-height: 550px;
