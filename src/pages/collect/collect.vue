@@ -1,23 +1,35 @@
 <template>
   <div name='collect'>
     <section class="btn_group">
-      <div class="btn" @click="addCollectionToggle = true">
+      <div class="btn" @click="searchToggle = !searchToggle">
+        <img class="icon" src="@IMG/seach_icon.png" alt="">
+        {{searchToggle ? '收起索引' : '打开索引'}}
+      </div>
+      <div class="btn" @click="createCollection">
         <img class="icon" src="@IMG/collect_icon.png" alt="">
         添加收藏
       </div>
     </section>
-    <section class="collection">
-      <div class="collection_classify" v-for="item in collection" :key="item.key">
-        <div class="collection_classify_name">{{item.title}}</div>
-        <div class="collection_list">
-          <div class="collection_item" :class="{'collection_openDetail_item': child.detailOpen}" v-for="(child, index) in item.list" :key="index">
-            <div class="collection_item_name" @mouseenter="handlerDetailBtn(child, true)" @mouseleave="handlerDetailBtn(child, false)">
-              <span class="name" @click="openCollection(child.address)">{{child.name}}</span>
-              <span class="checkDetail" @click="handlerDetailOpen(child)" v-show="child.showDetailBtn || child.detailOpen">{{child.detailOpen ? '收起' : '详情'}}</span>
-            </div>
-            <div class="collection_item_detail" v-show="child.detailOpen">
-              <div class="time">收藏时间：{{child.time}}</div>
-              <div class="desc">收藏说明：{{child.desc}}</div>
+    <section class="search" v-show="searchToggle">
+      <div class="search_item"  v-for="item in collection" :key="item.key" @click="scrollTo(item.key)">
+        {{item.title}}
+      </div>
+    </section>
+    <section class="collection" ref="collection">
+      <div class="wrapper">
+        <div class="collection_classify" v-for="item in collection" :key="item.key">
+          <div class="collection_classify_name" :ref="`classify_${item.key}`" @click="scrollTo(item.key)">{{item.title}}</div>
+          <div class="collection_list">
+            <div class="collection_item" :class="{'collection_openDetail_item': child.detailOpen}" v-for="(child, index) in item.list" :key="index">
+              <div class="collection_item_name" @mouseenter="handlerDetailBtn(child, true)" @mouseleave="handlerDetailBtn(child, false)">
+                <span class="name" :class="{'active_name': child.showDetailBtn}" @click="openCollection(child.address)">{{child.name}}</span>
+                <span class="checkDetail" @click="handlerDetailOpen(child)" v-show="child.showDetailBtn || child.detailOpen">{{child.detailOpen ? '收起' : '详情'}}</span>
+                <span class="checkDetail" @click="editCollection(child)" v-show="child.detailOpen">编辑</span>
+              </div>
+              <div class="collection_item_detail" v-show="child.detailOpen">
+                <div class="time">收藏时间：{{child.time}}</div>
+                <div class="desc">收藏说明：{{child.desc}}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -25,7 +37,7 @@
     </section>
     <el-dialog
       title="添加收藏"
-      :visible.sync="addCollectionToggle"
+      :visible.sync="collectionToggle"
       width="70%"
       center>
       <el-form ref="form" :model="form" label-width="80px">
@@ -37,7 +49,7 @@
         </el-form-item>
         <el-form-item label="收藏分类">
           <el-select v-model="form.classifyType" placeholder="请选择收藏分类" ref="classifySelect" @change="handlerClassify">
-            <el-option :label="item.value" :value="item.key" v-for="(item, index) in classifyList" :key="index">
+            <el-option :label="item.value" :value="item.key" v-for="(item, index) in classifyList" :key="item.key">
               <span style="float: left">{{ item.value }}</span>
               <span
                 @click.stop="deleteClassify(item, index)"
@@ -63,8 +75,8 @@
           <el-input type="textarea" v-model="form.desc" placeholder="请输入收藏说明"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">确认添加</el-button>
-          <el-button @click="addCollectionToggle = false">取消</el-button>
+          <el-button type="primary" @click="onSubmit">确认{{isAddCollection ? '添加' : '修改'}}</el-button>
+          <el-button @click="collectionToggle = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -74,17 +86,21 @@
 <script type='text/babel'>
   import format from '@/tools/format';
   import timeLimit from '@/tools/timeLimit';
-  import { getClassifyList, addClassify, deleteClassify, addCollection, getCollectionList } from '@/api/collect';
+  import { getClassifyList, addClassify, deleteClassify, addCollection, getCollectionList, editCollection } from '@/api/collect';
+  import BScroll from 'better-scroll';
   export default {
     name: 'collect',
     data () {
       return {
-        addCollectionToggle: false,
+        searchToggle: true,
+        collectionToggle: false,
         addClassifyToggle: false,
+        isAddCollection: true,
         newClassifyName: '',
         newClassifyKey: '',
         classifyList: [],
         collection: [],
+        scroll: '',
         form: {
           name: '',
           address: '',
@@ -129,6 +145,25 @@
           result.push(dataCatch[keys[i]]);
         }
         this.collection = [...result];
+        this.$nextTick(() => {
+          this.initScroll();
+        });
+      },
+      scrollTo (key) {
+        let ref = 'classify_' + key;
+        this.scroll.stop();
+        this.scroll && this.scroll.scrollToElement(this.$refs[ref][0], 400);
+      },
+      initScroll () {
+        if (this.scroll) {
+          this.scroll.refresh();
+        } else {
+          this.scroll = new BScroll(this.$refs.collection, {
+            probeType: 3,
+            click: true
+          });
+          this.scroll.scrollTo(0, 200);
+        }
       },
       getCollectionList () {
         getCollectionList().then(res => {
@@ -199,10 +234,16 @@
         }
       },
       onSubmit () {
-        addCollection(this.form).then(res => {
+        let changeFun;
+        if (this.isAddCollection) {
+          changeFun = addCollection;
+        } else {
+          changeFun = editCollection;
+        }
+        changeFun(this.form).then(res => {
           let data = res.data;
           if (data.code == 0) {
-            this.addCollectionToggle = false;
+            this.collectionToggle = false;
             Object.assign(this.form, {
               name: '',
               address: '',
@@ -211,12 +252,26 @@
               desc: ''
             });
             this.$message.success(data.msg);
+            this.getCollectionList();
           } else {
             this.$message.error(data.msg);
           }
         }).catch((err) => {
           this.$message.error(err);
         });
+      },
+      createCollection () {
+        this.collectionToggle = true;
+        this.isAddCollection = true;
+      },
+      editCollection (item) {
+        this.collectionToggle = true;
+        this.isAddCollection = false;
+        let keys = Object.keys(this.form);
+        for (let i in keys) {
+          this.form[keys[i]] = item[keys[i]];
+        }
+        this.form._id = item._id;
       },
       handlerDetailBtn (child, val) {
         this.$set(child, 'showDetailBtn', val);
@@ -237,10 +292,12 @@
   [name = 'collect']{
     position: relative;
     .wh(100%, 100%);
+    overflow: hidden;
     .btn_group{
       position: absolute;
       right: 0;
       top: 0;
+      z-index: 9;
       width: 10rem;
       height: 1.2rem;
       font-size: .6rem;
@@ -248,6 +305,7 @@
       justify-content: flex-end;
       align-items: center;
       .btn{
+        margin-left: .2rem;
         flex: 4.2rem 0 0;
         height: 100%;
         display: flex;
@@ -271,9 +329,35 @@
         }
       }
     }
+    .search{
+      position: absolute;
+      z-index: 9;
+      right: .2rem;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 0.2rem;
+      font-size: .5rem;
+      padding: .2rem;
+      top: 2rem;
+      max-height: 12rem;
+      width: 3rem;
+      overflow: auto;
+      .search_item{
+        width: 100%;
+        padding: .1rem 0;
+        text-align: center;
+        margin-bottom: .2rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.2rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+    }
     .collection{
       .wh(100%, 100%);
-      overflow: auto;
+      overflow: hidden;
       .collection_classify{
         font-size: .9rem;
         color: #111;
@@ -284,7 +368,7 @@
           cursor: pointer;
         }
         .collection_list{
-          padding: .2rem .6rem;
+          padding: .2rem 4.6rem .2rem .6rem;
           .collection_openDetail_item{
             background: rgba(0, 0, 0, 0.2);
             border-radius: .2rem;
@@ -303,6 +387,9 @@
                   color: #3190e8;
                   text-decoration: underline;
                 }
+              }
+              .active_name{
+                color: #fff;
               }
               .checkDetail{
                 cursor: pointer;
