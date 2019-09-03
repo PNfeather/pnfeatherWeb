@@ -11,4 +11,4 @@ export const addCollection = (data) => Http.post('/collect/addCollection', data)
 // 编辑收藏
 export const editCollection = (data) => Http.post('/collect/editCollection', data);
 // 获取收藏列表
-export const getCollectionList = () => Http.get('/collect/collectionList');
+export const getCollectionList = (data) => Http.get('/collect/collectionList', data);

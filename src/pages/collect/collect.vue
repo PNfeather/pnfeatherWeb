@@ -12,11 +12,21 @@
     </section>
     <div class="searchWrapper">
       <transition name="form-fade" mode="in-out">
-          <section class="search" v-show="searchToggle">
+        <div v-show="searchToggle">
+          <div class="search_input">
+            <div class="input_wrapper">
+              <input v-model="keyWord" type="text" class="input">
+              <div class="closeBtn" v-show="keyWord !== ''" @click="keyWord = ''">
+                <i class="el-icon-circle-close"></i>
+              </div>
+            </div>
+          </div>
+          <section class="search" v-show="collection.length">
             <div class="search_item"  v-for="item in collection" :key="item.key" @click="scrollTo(item.key)">
               {{item.title}}
             </div>
           </section>
+        </div>
       </transition>
     </div>
     <section class="collection" ref="collection">
@@ -92,10 +102,12 @@
   import timeLimit from '@/tools/timeLimit';
   import { getClassifyList, addClassify, deleteClassify, addCollection, getCollectionList, editCollection } from '@/api/collect';
   import BScroll from 'better-scroll';
+  import _ from '@/plugins/lodash';
   export default {
     name: 'collect',
     data () {
       return {
+        keyWord: '',
         searchToggle: true,
         collectionToggle: false,
         addClassifyToggle: false,
@@ -112,11 +124,17 @@
           classifyType: '',
           time: '',
           desc: ''
-        }
+        },
+        changeKeyWord: _.debounce(this.getCollectionList, 500)
       };
     },
     created () {
       this.pageInit();
+    },
+    watch: {
+      keyWord () {
+        this.changeKeyWord();
+      }
     },
     methods: {
       pageInit () {
@@ -170,7 +188,7 @@
         }
       },
       getCollectionList () {
-        getCollectionList().then(res => {
+        getCollectionList({params: {keyWord: this.keyWord}}).then(res => {
           let data = res.data;
           if (data.code == 0) {
             let reData = data.data;
@@ -337,10 +355,49 @@
       position: absolute;
       z-index: 9;
       right: .2rem;
-      top: 3.5rem;
+      top: 3.2rem;
       max-height: 12rem;
       width: 3.8rem;
       overflow: hidden;
+      .search_input{
+        width: 3.8rem;
+        height: 1.2rem;
+        margin-bottom: .2rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.2rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .input_wrapper{
+          flex: 1;
+          height: 100%;
+          padding: .1rem .9rem .1rem .2rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-sizing: border-box;
+          position: relative;
+          .closeBtn{
+            position: absolute;
+            right: .2rem;
+            width: .5rem;
+            height: .5rem;
+            color: #fff;
+            font-size: .5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .input{
+            width: 100%;
+            height: 1rem;
+            line-height: 1rem;
+            font-size: .7rem;
+            background: transparent;
+            color: #fff;
+          }
+        }
+      }
       .search{
         .wh(100%, 100%);
         max-height: 12rem;
@@ -352,6 +409,9 @@
         font-size: .5rem;
         overflow: auto;
         .search_item{
+          &:last-child{
+            margin-bottom: 0;
+          }
           width: 100%;
           padding: .1rem 0;
           text-align: center;
