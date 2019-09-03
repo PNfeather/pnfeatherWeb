@@ -1,20 +1,24 @@
 <template>
   <div name='collect'>
     <section class="btn_group">
-      <div class="btn" @click="searchToggle = !searchToggle">
-        <img class="icon" src="@IMG/seach_icon.png" alt="">
-        {{searchToggle ? '收起索引' : '打开索引'}}
-      </div>
       <div class="btn" @click="createCollection">
         <img class="icon" src="@IMG/collect_icon.png" alt="">
         添加收藏
       </div>
-    </section>
-    <section class="search" v-show="searchToggle">
-      <div class="search_item"  v-for="item in collection" :key="item.key" @click="scrollTo(item.key)">
-        {{item.title}}
+      <div class="btn" @click="searchToggle = !searchToggle">
+        <img class="icon" src="@IMG/seach_icon.png" alt="">
+        {{searchToggle ? '收起索引' : '打开索引'}}
       </div>
     </section>
+    <div class="searchWrapper">
+      <transition name="form-fade" mode="in-out">
+          <section class="search" v-show="searchToggle">
+            <div class="search_item"  v-for="item in collection" :key="item.key" @click="scrollTo(item.key)">
+              {{item.title}}
+            </div>
+          </section>
+      </transition>
+    </div>
     <section class="collection" ref="collection">
       <div class="wrapper">
         <div class="collection_classify" v-for="item in collection" :key="item.key">
@@ -298,16 +302,16 @@
       right: 0;
       top: 0;
       z-index: 9;
-      width: 10rem;
-      height: 1.2rem;
+      width: 4.2rem;
+      height: 3rem;
       font-size: .6rem;
       display: flex;
-      justify-content: flex-end;
+      flex-direction: column;
+      justify-content: space-around;
       align-items: center;
       .btn{
-        margin-left: .2rem;
-        flex: 4.2rem 0 0;
-        height: 100%;
+        flex: 1.2rem 0 0;
+        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -329,30 +333,36 @@
         }
       }
     }
-    .search{
+    .searchWrapper{
       position: absolute;
       z-index: 9;
       right: .2rem;
-      color: #fff;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 0.2rem;
-      font-size: .5rem;
-      padding: .2rem;
-      top: 2rem;
+      top: 3.5rem;
       max-height: 12rem;
-      width: 3rem;
-      overflow: auto;
-      .search_item{
-        width: 100%;
-        padding: .1rem 0;
-        text-align: center;
-        margin-bottom: .2rem;
+      width: 3.8rem;
+      overflow: hidden;
+      .search{
+        .wh(100%, 100%);
+        max-height: 12rem;
+        padding: .2rem;
+        box-sizing: border-box;
         background: rgba(0, 0, 0, 0.2);
+        color: #fff;
         border-radius: 0.2rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        cursor: pointer;
+        font-size: .5rem;
+        overflow: auto;
+        .search_item{
+          width: 100%;
+          padding: .1rem 0;
+          text-align: center;
+          margin-bottom: .2rem;
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 0.2rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          cursor: pointer;
+        }
       }
     }
     .collection{
@@ -413,6 +423,12 @@
           }
         }
       }
+    }
+    .form-fade-enter-active, .form-fade-leave-active {
+      transition: all .5s;
+    }
+    .form-fade-enter, .form-fade-leave-active {
+      transform: translate3d(0, -90%, 0);
     }
   }
 </style>
