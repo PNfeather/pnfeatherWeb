@@ -1,52 +1,56 @@
 <template>
   <div name='collect'>
-    <section class="btn_group">
-      <div class="btn" @click="createCollection">
-        <img class="icon" src="@IMG/collect_icon.png" alt="">
-        添加收藏
-      </div>
-      <div class="btn" @click="searchToggle = !searchToggle">
-        <img class="icon" src="@IMG/seach_icon.png" alt="">
-        {{searchToggle ? '收起索引' : '打开索引'}}
-      </div>
+    <section class="content_area">
+      <section class="collection" ref="collection">
+        <div class="wrapper">
+          <div class="collection_classify" v-for="item in collection" :key="item.key">
+            <div class="collection_classify_name" :ref="`classify_${item.key}`" @click="scrollTo(item.key)">{{item.title}}</div>
+            <div class="collection_list">
+              <div class="collection_item" :class="{'collection_openDetail_item': child.detailOpen}" v-for="(child, index) in item.list" :key="index">
+                <div class="collection_item_name" @mouseenter="handlerDetailBtn(child, true)" @mouseleave="handlerDetailBtn(child, false)">
+                  <span class="name" :class="{'active_name': child.showDetailBtn}" @click="openCollection(child.address)">{{child.name}}</span>
+                  <span class="checkDetail" @click="handlerDetailOpen(child)" v-show="child.showDetailBtn || child.detailOpen">{{child.detailOpen ? '收起' : '详情'}}</span>
+                  <span class="checkDetail" @click="editCollection(child)" v-show="child.detailOpen">编辑</span>
+                </div>
+                <div class="collection_item_detail" v-show="child.detailOpen">
+                  <div class="time">收藏时间：{{child.time}}</div>
+                  <div class="desc">收藏说明：{{child.desc}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </section>
-    <div class="searchWrapper">
-      <transition name="form-fade" mode="in-out">
-        <div v-show="searchToggle">
-          <div class="search_input">
-            <div class="input_wrapper">
-              <input v-model="keyWord" type="text" class="input">
-              <div class="closeBtn" v-show="keyWord !== ''" @click="keyWord = ''">
-                <i class="el-icon-circle-close"></i>
-              </div>
-            </div>
-          </div>
-          <section class="search" v-show="collection.length">
-            <div class="search_item"  v-for="item in collection" :key="item.key" @click="scrollTo(item.key)">
-              {{item.title}}
-            </div>
-          </section>
+    <section class="fun_area">
+      <section class="btn_group">
+        <div class="btn" @click="createCollection">
+          <img class="icon" src="@IMG/collect_icon.png" alt="">
+          添加收藏
         </div>
-      </transition>
-    </div>
-    <section class="collection" ref="collection">
-      <div class="wrapper">
-        <div class="collection_classify" v-for="item in collection" :key="item.key">
-          <div class="collection_classify_name" :ref="`classify_${item.key}`" @click="scrollTo(item.key)">{{item.title}}</div>
-          <div class="collection_list">
-            <div class="collection_item" :class="{'collection_openDetail_item': child.detailOpen}" v-for="(child, index) in item.list" :key="index">
-              <div class="collection_item_name" @mouseenter="handlerDetailBtn(child, true)" @mouseleave="handlerDetailBtn(child, false)">
-                <span class="name" :class="{'active_name': child.showDetailBtn}" @click="openCollection(child.address)">{{child.name}}</span>
-                <span class="checkDetail" @click="handlerDetailOpen(child)" v-show="child.showDetailBtn || child.detailOpen">{{child.detailOpen ? '收起' : '详情'}}</span>
-                <span class="checkDetail" @click="editCollection(child)" v-show="child.detailOpen">编辑</span>
-              </div>
-              <div class="collection_item_detail" v-show="child.detailOpen">
-                <div class="time">收藏时间：{{child.time}}</div>
-                <div class="desc">收藏说明：{{child.desc}}</div>
+        <div class="btn" @click="searchToggle = !searchToggle">
+          <img class="icon" src="@IMG/seach_icon.png" alt="">
+          {{searchToggle ? '收起索引' : '打开索引'}}
+        </div>
+      </section>
+      <div class="searchWrapper">
+        <transition name="form-fade" mode="in-out">
+          <div v-show="searchToggle">
+            <div class="search_input">
+              <div class="input_wrapper">
+                <input v-model="keyWord" type="text" class="input">
+                <div class="closeBtn" v-show="keyWord !== ''" @click="keyWord = ''">
+                  <i class="el-icon-circle-close"></i>
+                </div>
               </div>
             </div>
+            <section class="search" v-show="collection.length">
+              <div class="search_item"  v-for="item in collection" :key="item.key" @click="scrollTo(item.key)">
+                {{item.title}}
+              </div>
+            </section>
           </div>
-        </div>
+        </transition>
       </div>
     </section>
     <el-dialog
@@ -315,171 +319,175 @@
     position: relative;
     .wh(100%, 100%);
     overflow: hidden;
-    .btn_group{
-      position: absolute;
-      right: 0;
-      top: 0;
-      z-index: 9;
-      width: 4.2rem;
-      height: 3rem;
-      font-size: .6rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: center;
-      .btn{
-        flex: 1.2rem 0 0;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #999;
-        font-size: .6rem;
-        border-radius: .4rem;
-        background: rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        &:hover{
-          text-decoration: underline;
-          color: #fff!important;
-          .icon{
-            transform: scale(1.2, 1.2);
+    display: flex;
+    .content_area{
+      flex: 1;
+      height: 100%;
+      .collection{
+        .wh(100%, 100%);
+        overflow: hidden;
+        .collection_classify{
+          font-size: .9rem;
+          color: #111;
+          padding: .2rem .4rem;
+          margin-bottom: .4rem;
+          .collection_classify_name{
+            display: inline-block;
+            cursor: pointer;
           }
-        }
-        .icon{
-          .wh(.7rem, .7rem);
-          margin-right: .2rem;
+          .collection_list{
+            padding: .2rem 4.6rem .2rem .6rem;
+            .collection_openDetail_item{
+              background: rgba(0, 0, 0, 0.2);
+              border-radius: .2rem;
+              color: #fff!important;
+              padding: .4rem!important;
+            }
+            .collection_item{
+              font-size: .6rem;
+              color: #444;
+              margin-bottom: .1rem;
+              .collection_item_name{
+                .name{
+                  cursor: pointer;
+                  margin-right: .5rem;
+                  &:hover{
+                    color: #3190e8;
+                    text-decoration: underline;
+                  }
+                }
+                .active_name{
+                  color: #fff;
+                }
+                .checkDetail{
+                  cursor: pointer;
+                  font-size: .5rem;
+                  background: rgba(255, 255, 255, 0.2);
+                  padding: .1rem .2rem;
+                  border-radius: .2rem;
+                  &:hover{
+                    color: #3190e8;
+                    text-decoration: underline;
+                  }
+                }
+              }
+              .collection_item_detail{
+                margin-top: .3rem;
+                border-top: 1px solid #fff;
+                .time, .desc{
+                  margin-top: .2rem;
+                }
+              }
+            }
+          }
         }
       }
     }
-    .searchWrapper{
-      position: absolute;
-      z-index: 9;
-      right: .2rem;
-      top: 3.2rem;
-      max-height: 12rem;
-      width: 3.8rem;
-      overflow: hidden;
-      .search_input{
-        width: 3.8rem;
-        height: 1.2rem;
-        margin-bottom: .2rem;
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 0.2rem;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        .input_wrapper{
-          flex: 1;
-          height: 100%;
-          padding: .1rem .9rem .1rem .2rem;
+    .fun_area{
+      flex: 4.2rem 0 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: .5rem;
+      .btn_group{
+        width: 100%;
+        font-size: .6rem;
+        .btn{
+          margin-top: .3rem;
+          height: 1.2rem;
+          width: 100%;
           display: flex;
           justify-content: center;
           align-items: center;
-          box-sizing: border-box;
-          position: relative;
-          .closeBtn{
-            position: absolute;
-            right: .2rem;
-            width: .5rem;
-            height: .5rem;
-            color: #fff;
-            font-size: .5rem;
+          color: #999;
+          font-size: .6rem;
+          border-radius: .4rem;
+          background: rgba(0, 0, 0, 0.2);
+          cursor: pointer;
+          &:first-child{
+            margin-top: 0;
+          }
+          &:hover{
+            text-decoration: underline;
+            color: #fff!important;
+            .icon{
+              transform: scale(1.2, 1.2);
+            }
+          }
+          .icon{
+            .wh(.7rem, .7rem);
+            margin-right: .2rem;
+          }
+        }
+      }
+      .searchWrapper{
+        width: 3.8rem;
+        overflow: hidden;
+        .search_input{
+          margin-top: .3rem;
+          width: 100%;
+          height: 1.2rem;
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 0.2rem;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          .input_wrapper{
+            flex: 1;
+            height: 100%;
+            padding: .1rem .9rem .1rem .2rem;
             display: flex;
             justify-content: center;
             align-items: center;
-          }
-          .input{
-            width: 100%;
-            height: 1rem;
-            line-height: 1rem;
-            font-size: .7rem;
-            background: transparent;
-            color: #fff;
+            box-sizing: border-box;
+            position: relative;
+            .closeBtn{
+              position: absolute;
+              right: .2rem;
+              width: .5rem;
+              height: .5rem;
+              color: #fff;
+              font-size: .5rem;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            .input{
+              width: 100%;
+              height: 1rem;
+              line-height: 1rem;
+              font-size: .7rem;
+              background: transparent;
+              color: #fff;
+            }
           }
         }
-      }
-      .search{
-        .wh(100%, 100%);
-        max-height: 12rem;
-        padding: .2rem;
-        box-sizing: border-box;
-        background: rgba(0, 0, 0, 0.2);
-        color: #fff;
-        border-radius: 0.2rem;
-        font-size: .5rem;
-        overflow: auto;
-        .search_item{
-          &:last-child{
-            margin-bottom: 0;
-          }
-          width: 100%;
-          padding: .1rem 0;
-          text-align: center;
-          margin-bottom: .2rem;
+        .search{
+          .wh(100%, 100%);
+          margin-top: .3rem;
+          max-height: 11rem;
+          padding: .2rem;
+          box-sizing: border-box;
           background: rgba(0, 0, 0, 0.2);
+          color: #fff;
           border-radius: 0.2rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          cursor: pointer;
-        }
-      }
-    }
-    .collection{
-      .wh(100%, 100%);
-      overflow: hidden;
-      .collection_classify{
-        font-size: .9rem;
-        color: #111;
-        padding: .2rem .4rem;
-        margin-bottom: .4rem;
-        .collection_classify_name{
-          display: inline-block;
-          cursor: pointer;
-        }
-        .collection_list{
-          padding: .2rem 4.6rem .2rem .6rem;
-          .collection_openDetail_item{
+          font-size: .5rem;
+          overflow: auto;
+          .search_item{
+            &:last-child{
+              margin-bottom: 0;
+            }
+            width: 100%;
+            padding: .1rem 0;
+            text-align: center;
+            margin-bottom: .2rem;
             background: rgba(0, 0, 0, 0.2);
-            border-radius: .2rem;
-            color: #fff!important;
-            padding: .4rem!important;
-          }
-          .collection_item{
-            font-size: .6rem;
-            color: #444;
-            margin-bottom: .1rem;
-            .collection_item_name{
-              .name{
-                cursor: pointer;
-                margin-right: .5rem;
-                &:hover{
-                  color: #3190e8;
-                  text-decoration: underline;
-                }
-              }
-              .active_name{
-                color: #fff;
-              }
-              .checkDetail{
-                cursor: pointer;
-                font-size: .5rem;
-                background: rgba(255, 255, 255, 0.2);
-                padding: .1rem .2rem;
-                border-radius: .2rem;
-                &:hover{
-                  color: #3190e8;
-                  text-decoration: underline;
-                }
-              }
-            }
-            .collection_item_detail{
-              margin-top: .3rem;
-              border-top: 1px solid #fff;
-              .time, .desc{
-                margin-top: .2rem;
-              }
-            }
+            border-radius: 0.2rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
           }
         }
       }
