@@ -336,7 +336,7 @@
             cursor: pointer;
           }
           .collection_list{
-            padding: .2rem 4.6rem .2rem .6rem;
+            padding: .2rem 1.6rem .2rem .6rem;
             .collection_openDetail_item{
               background: rgba(0, 0, 0, 0.2);
               border-radius: .2rem;
