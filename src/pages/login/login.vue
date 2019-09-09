@@ -30,6 +30,8 @@
         loginForm: {
           username: 'PNfeather',
           password: 'abcdef'
+          // username: 'visitor',
+          // password: '123456'
         },
         rules: {
           username: [
@@ -60,7 +62,7 @@
               if (data.code == '0') {
                 this.$message({
                   type: 'success',
-                  message: '登录成功'
+                  message: '欢迎光临'
                 });
                 this.$store.dispatch('changeUserLevel', data.data.level);
                 if (this.$route.query.autoBack) {

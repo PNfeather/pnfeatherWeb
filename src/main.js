@@ -4,7 +4,7 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import http from '@/plugins/http';
-import store from './store/';
+import store from './store';
 import HeaderTop from '@C/headerTop';
 import 'element-ui/lib/theme-chalk/index.css';
 import ElementUI from 'element-ui';

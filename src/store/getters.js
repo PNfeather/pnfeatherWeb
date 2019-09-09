@@ -1,4 +1,4 @@
 const getters = {
-  userLevel: state => state.userLevel
+  userLevel: state => state.user.userLevel
 };
 export default getters;

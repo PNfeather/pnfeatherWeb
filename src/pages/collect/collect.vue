@@ -10,7 +10,7 @@
                 <div class="collection_item_name" @mouseenter="handlerDetailBtn(child, true)" @mouseleave="handlerDetailBtn(child, false)">
                   <span class="name" :class="{'active_name': child.showDetailBtn}" @click="openCollection(child.address)">{{child.name}}</span>
                   <span class="checkDetail" @click="handlerDetailOpen(child)" v-show="child.showDetailBtn || child.detailOpen">{{child.detailOpen ? '收起' : '详情'}}</span>
-                  <span class="checkDetail" @click="editCollection(child)" v-show="child.detailOpen">编辑</span>
+                  <span v-if="isManager" class="checkDetail" @click="editCollection(child)" v-show="child.detailOpen">编辑</span>
                 </div>
                 <div class="collection_item_detail" v-show="child.detailOpen">
                   <div class="time">收藏时间：{{child.time}}</div>
@@ -24,7 +24,7 @@
     </section>
     <section class="fun_area">
       <section class="btn_group">
-        <div class="btn" @click="createCollection">
+        <div v-if="isManager" class="btn" @click="createCollection">
           <img class="icon" src="@IMG/collect_icon.png" alt="">
           添加收藏
         </div>
@@ -38,9 +38,10 @@
           <div v-show="searchToggle">
             <div class="search_input">
               <div class="input_wrapper">
-                <input v-model="keyWord" type="text" class="input">
-                <div class="closeBtn" v-show="keyWord !== ''" @click="keyWord = ''">
-                  <i class="el-icon-circle-close"></i>
+                <input v-model="keyWord" placeholder="输入筛选" type="text" class="input">
+                <div class="closeBtn" @click="keyWord = ''">
+                  <i class="el-icon-circle-close" v-show="keyWord !== ''"></i>
+                  <i class="el-icon-search" v-show="keyWord === ''"></i>
                 </div>
               </div>
             </div>
@@ -138,9 +139,27 @@
     watch: {
       keyWord () {
         this.changeKeyWord();
+      },
+      isAddCollection (val) { // 从编辑改到添加时清空form
+        if (val) {
+          this.resetFrom();
+        }
+      }
+    },
+    computed: {
+      isManager () {
+        return (this.$store.getters.userLevel === '1');
       }
     },
     methods: {
+      resetFrom () {
+        this.form.name = '';
+        this.form.address = '';
+        this.form.classify = '';
+        this.form.classifyType = '';
+        this.form.time = '';
+        this.form.desc = '';
+      },
       pageInit () {
         const time = format(new Date(), 'YYYY-MM-DD');
         this.form.time = time;
@@ -219,6 +238,10 @@
       },
       deleteClassify (item, index) {
         this.$confirm('是否确认删除当前分类', '确认信息').then(() => {
+          if (item.key === this.form.classifyType) {
+            this.form.classifyType = '';
+            this.form.classify = '';
+          }
           this.classifyList.splice(index, 1);
           deleteClassify({id: item._id}).then(res => {
             let data = res.data;
@@ -457,9 +480,12 @@
               width: 100%;
               height: 1rem;
               line-height: 1rem;
-              font-size: .7rem;
+              font-size: .6rem;
               background: transparent;
               color: #fff;
+              &::placeholder{
+                color: #fff;
+              }
             }
           }
         }
