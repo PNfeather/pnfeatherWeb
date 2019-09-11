@@ -79,7 +79,7 @@
     .wh(28rem, 1.2rem);
     font-size: .8rem;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     max-height: 44px;
     .header_item_active{
@@ -87,7 +87,7 @@
     }
     .header_item{
       color: #000;
-      flex: 3.2rem 0 0;
+      flex: 4.2rem 0 0;
       font-size: .6rem;
       display: flex;
       height: 100%;

@@ -69,6 +69,6 @@
     transition: all .5s;
   }
   .form-fade-enter, .form-fade-leave-active {
-    transform: translate3d(-90%, 0, 0);
+    transform: translate3d(0, -90%, 0);
   }
 </style>
