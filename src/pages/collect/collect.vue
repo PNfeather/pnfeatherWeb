@@ -219,7 +219,8 @@
         } else {
           this.scroll = new BScroll(this.$refs.collection, {
             probeType: 3,
-            click: true
+            click: true,
+            mouseWheel: true
           });
           this.scroll.scrollTo(0, 200);
         }
