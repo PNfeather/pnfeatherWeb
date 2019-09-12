@@ -106,6 +106,7 @@
   import format from '@/tools/format';
   import timeLimit from '@/tools/timeLimit';
   import { getClassifyList, addClassify, deleteClassify, addCollection, getCollectionList, editCollection } from '@/api/collect';
+  import { getServiceTime } from '@/api/common';
   import BScroll from 'better-scroll';
   import _ from '@/plugins/lodash';
   export default {
@@ -160,11 +161,24 @@
         this.form.time = '';
         this.form.desc = '';
       },
-      pageInit () {
-        const time = format(new Date(), 'YYYY-MM-DD');
-        this.form.time = time;
+      async pageInit () {
+        const time = await this.getServiceTime();
+        this.form.time = format(new Date(time), 'YYYY-MM-DD');
         this.getClassifyList();
         this.getCollectionList();
+      },
+      getServiceTime () {
+        return getServiceTime().then(res => {
+          let data = res.data;
+          if (data.code == 0) {
+            let reData = data.data;
+            return Promise.resolve(reData);
+          } else {
+            this.$message.error(data.msg);
+          }
+        }).catch((err) => {
+          this.$message.error(err);
+        });
       },
       handlerClassify (key) {
         this.classifyList.forEach(item => {
