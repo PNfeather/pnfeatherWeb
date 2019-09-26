@@ -79,3 +79,29 @@
   bottom: @bottom;
   left: @left;
 }
+
+.heartIcon(@p) { // less计算方法，传入长度带单位
+  @phalf: ~"calc((@{p} / 2))";
+  @p910:  ~"calc((@{p} * 9 / 10))";
+  @p45:  ~"calc((@{p} * 4 / 5))";
+  position: relative;
+  width: @p;
+  height: @p910;
+  &:before,&:after{
+    content: '';
+    position: absolute;
+    left: @phalf;
+    top: 0;
+    width: @phalf;
+    height: @p45;
+    background: red;
+    border-radius: @phalf @phalf 0 0;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+  }
+  &:after{
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+  }
+}
