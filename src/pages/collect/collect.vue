@@ -47,7 +47,7 @@
             </div>
             <section class="search" v-show="collection.length">
               <div class="search_item"  v-for="item in collection" :key="item.key" @click="scrollTo(item.key)">
-                {{item.title}}
+                <span class="text">{{item.title}}</span>
               </div>
             </section>
           </div>
@@ -390,7 +390,7 @@
                   cursor: pointer;
                   margin-right: .5rem;
                   &:hover{
-                    color: #3190e8;
+                    color: @blue;
                     text-decoration: underline;
                   }
                 }
@@ -404,7 +404,7 @@
                   padding: .1rem .2rem;
                   border-radius: .2rem;
                   &:hover{
-                    color: #3190e8;
+                    color: @blue;
                     text-decoration: underline;
                   }
                 }
@@ -508,7 +508,7 @@
           .wh(100%, 100%);
           margin-top: .3rem;
           max-height: 11rem;
-          padding: .2rem;
+          padding: 0.1rem .2rem;
           box-sizing: border-box;
           background: rgba(0, 0, 0, 0.2);
           color: #fff;
@@ -516,19 +516,52 @@
           font-size: .5rem;
           overflow: auto;
           .search_item{
-            &:last-child{
-              margin-bottom: 0;
-            }
-            width: 100%;
+            position: relative;
             padding: .1rem 0;
-            text-align: center;
-            margin-bottom: .2rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 0.2rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            width: 100%;
+            height: 1rem;
+            transition: all 300ms;
             cursor: pointer;
+            &:after{
+              content: '';
+              position: absolute;
+              width: 100%;
+              left: 0;
+              height: 0;
+              top: 100%;
+              border-right: 2px solid transparent;
+              transition: all 300ms;
+            }
+            &:active {
+              background-color: @blue;
+              .text{
+                background-color: transparent;
+              }
+            }
+            &:hover{
+              &:after{
+                top: 0;
+                right: 0;
+                height: 100%;
+                border-right-color: @blue;
+                transition-delay: 100ms;
+              }
+              & + .search_item:after{
+                top: 0;
+              }
+            }
+            .text{
+              display: inline-block;
+              width: 100%;
+              line-height: 1rem;
+              text-align: center;
+              background: rgba(0, 0, 0, 0.2);
+              border-radius: 0.2rem;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              cursor: pointer;
+            }
           }
         }
       }

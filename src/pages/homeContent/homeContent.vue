@@ -1,23 +1,49 @@
 <template>
   <div name='homeContent'>
-    <div class="electromagnetism" data-text="欢迎来到羽的次元">
-      欢迎来到羽的次元
+    <div class="electromagnetism" data-text ref="welcome">
+    </div>
+    <div class="electromagnetism" data-text ref="test">
     </div>
   </div>
 </template>
 
 <script type='text/babel'>
+  import Typing from './method';
   export default {
     name: 'homeContent',
     data () {
       return {
+        delayTime: 400,
+        pageTexts: [
+          {
+            el: 'welcome',
+            text: '欢迎来到羽的空间'
+          }, {
+            el: 'test',
+            text: '测试文案'
+          }
+        ]
       };
     },
     created () {},
-    mounted () {},
+    mounted () {
+      this.start();
+    },
     computed: {},
     watch: {},
-    methods: {},
+    methods: {
+      start () {
+        this.pageTexts.forEach((item) => {
+          const el = this.$refs[item.el];
+          const text = item.text;
+          const typing = new Typing(el, text);
+          setTimeout(() => {
+            typing.startTyping();
+          }, this.delayTime);
+          this.delayTime += (text.length + 1) * 100;
+        });
+      }
+    },
     components: {}
   };
 </script>
