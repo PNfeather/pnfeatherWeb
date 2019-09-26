@@ -1,8 +1,10 @@
 <template>
   <div name='homeContent'>
-    <div class="electromagnetism" data-text ref="welcome">
-    </div>
-    <div class="electromagnetism" data-text ref="test">
+    <div v-for="(item, index) in pageTexts" :key="index">
+      <span v-if="!item.children" :class=[item.className] :ref="item.el" data-text></span>
+      <div v-if="item.children">
+        <span v-for="(child, childIndex) in item.children" :key="childIndex" :class=[child.className] :ref="child.el"></span>
+      </div>
     </div>
   </div>
 </template>
@@ -17,31 +19,61 @@
         pageTexts: [
           {
             el: 'welcome',
+            className: 'electromagnetism',
             text: '欢迎来到羽的空间'
           }, {
-            el: 'test',
-            text: '测试文案'
+            className: 'name',
+            children: [
+              {
+                el: 'name-label',
+                className: 'labelText',
+                text: '姓名:'
+              }, {
+                el: 'name-value',
+                text: '羽'
+              }
+            ]
+          }, {
+            className: 'nickName',
+            children: [
+              {
+                el: 'nickName-label',
+                className: 'labelText',
+                text: '常用网络ID:'
+              }, {
+                el: 'nickName-value',
+                text: 'PNfeather、紫夜羽'
+              }
+            ]
           }
         ]
       };
     },
-    created () {},
     mounted () {
       this.start();
     },
-    computed: {},
-    watch: {},
     methods: {
-      start () {
+      start () { // 欢迎文案依次打出效果
         this.pageTexts.forEach((item) => {
-          const el = this.$refs[item.el];
-          const text = item.text;
-          const typing = new Typing(el, text);
-          setTimeout(() => {
-            typing.startTyping();
-          }, this.delayTime);
-          this.delayTime += (text.length + 1) * 100;
+          if (!item.children) {
+            this.dealItem(item);
+          } else {
+            item.children.forEach((child) => {
+              this.dealItem(child);
+            });
+          }
         });
+      },
+      dealItem (item) {
+        const el = this.$refs[item.el][0];
+        const text = item.text;
+        const typing = new Typing(el, text);
+        el.innerHTML = '';
+        el.attributes['data-text'] && (el.attributes['data-text'].value = '');
+        setTimeout(() => {
+          typing.startTyping();
+        }, this.delayTime);
+        this.delayTime += (text.length + 20) * 20;
       }
     },
     components: {}
@@ -50,6 +82,10 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   [name = 'homeContent']{
+    .wh(100%, 100%);
+    [class*='section-']{
+      .wh(100%, 100%)
+    }
     .electromagnetism { // 电磁干扰文
       position: relative;
       font-weight: bold;
@@ -85,6 +121,9 @@
           .generate-columns(@n, (@i + 1));
         }
       }
+    }
+    .labelText{
+      margin-right: .3rem;
     }
   }
 </style>

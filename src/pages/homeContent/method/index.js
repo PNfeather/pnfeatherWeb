@@ -11,7 +11,7 @@ class Typing {
         this.element.attributes['data-text'].value = this.text.slice(0, this.count);
       }
       this.element.innerHTML = this.text.slice(0, this.count++) + '_';
-      setTimeout(() => this.startTyping(), 100);
+      setTimeout(() => this.startTyping(), 20);
     } else {
       if (this.element.attributes['data-text']) {
         this.element.attributes['data-text'].value = this.text;
