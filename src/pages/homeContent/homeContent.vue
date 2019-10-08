@@ -14,7 +14,12 @@
     <div class="contactWay">
       <div class="title">联系方式:</div>
       <div class="content">
-        <div>微信：<span v-clipboard:copy="wxInfo" v-clipboard:success="onCopy('wx')" v-clipboard:error="onError">{{wxInfo}}</span></div>
+        <div @mouseenter="() => showWx = true" @mouseover="() => showWx = true" @mouseout="() => showWx = false">微信：<span class="wx" v-clipboard:copy="wxInfo" v-clipboard:success="onCopy('wx')" v-clipboard:error="onError">
+          <span class="imgBorder" v-show="showWx">
+            <img class="wxImg" src="@IMG/wx.jpeg" alt="">
+          </span>
+          {{wxInfo}}
+        </span></div>
         <div>QQ：<span v-clipboard:copy="qqInfo" v-clipboard:success="onCopy('qq')" v-clipboard:error="onError">{{qqInfo}}</span></div>
       </div>
     </div>
@@ -30,6 +35,7 @@
       return {
         delayTime: 400,
         years: '',
+        showWx: false,
         wxInfo: 'yu13824424446',
         qqInfo: '921192114',
         pageTexts: [
@@ -250,12 +256,12 @@
         line-height: 50px;
         color: #fff;
         transform: rotate(0) translate(0, -80px);
-        animation: rotate 3s linear infinite;
+        animation: rotate 9s linear infinite;
         &:nth-child(2) {
-          animation-delay: -1s;
+          animation-delay: -3s;
         }
         &:nth-child(3) {
-          animation-delay: -2s;
+          animation-delay: -6s;
         }
         span::after{
           content: '';
@@ -282,6 +288,27 @@
         justify-content: flex-start;
         >div{
           margin-right: 1rem;
+          .wx{
+            position: relative;
+            .imgBorder{
+              .lr();
+              top: -8.5rem;
+              display: inline-block;
+              .wh(6rem, 8rem);
+              &:after{
+                content: '';
+                position: absolute;
+                bottom: -.3rem;
+                left: 40%;
+                border-top: .4rem solid #fff;
+                border-left: .4rem solid transparent;
+                border-right: .4rem solid transparent;
+              }
+              .wxImg{
+                .wh(100%, 100%);
+              }
+            }
+          }
           >span{
             cursor: pointer;
             &:hover{
