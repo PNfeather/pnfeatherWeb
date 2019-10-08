@@ -93,9 +93,9 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   .login_page{
-    background: url("~@IMG/china-background1.jpg") center no-repeat;
+    background: url("~@IMG/china-background1.png") center no-repeat;
     background-size: cover;
-    background-color: #222;
+    background-color: #18221f;
   }
   .manage_tip{
     position: absolute;
