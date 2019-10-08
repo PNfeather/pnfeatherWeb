@@ -11,6 +11,13 @@
       <li><span>姓别<br>男</span></li>
       <li><span>年龄<br>{{years}}</span></li>
     </div>
+    <div class="contactWay">
+      <div class="title">联系方式:</div>
+      <div class="content">
+        <div>微信：<span v-clipboard:copy="wxInfo" v-clipboard:success="onCopy('wx')" v-clipboard:error="onError">{{wxInfo}}</span></div>
+        <div>QQ：<span v-clipboard:copy="qqInfo" v-clipboard:success="onCopy('qq')" v-clipboard:error="onError">{{qqInfo}}</span></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -23,6 +30,8 @@
       return {
         delayTime: 400,
         years: '',
+        wxInfo: 'yu13824424446',
+        qqInfo: '921192114',
         pageTexts: [
           {
             el: 'welcome',
@@ -156,6 +165,20 @@
         }).catch((err) => {
           this.$message.error(err);
         });
+      },
+      onCopy (type) { // 复制成功
+        if (type === 'wx') {
+          return () => {
+            this.$message.success('微信信息已复制');
+          };
+        } else {
+          return () => {
+            this.$message.success('qq信息已复制');
+          };
+        }
+      },
+      onError () { // 复制失败
+        this.$message.error('复制失败');
       }
     }
   };
@@ -172,6 +195,7 @@
       text-align-last: justify;
       display: inline-block;
       width: 4rem;
+      margin-right: .3rem;
     }
     .electromagnetism { // 电磁干扰文
       position: relative;
@@ -249,8 +273,23 @@
         }
       }
     }
-    .labelText{
-      margin-right: .3rem;
+    .contactWay{
+      position: absolute;
+      bottom: 0;
+      font-size: .7rem;
+      .content{
+        display: flex;
+        justify-content: flex-start;
+        >div{
+          margin-right: 1rem;
+          >span{
+            cursor: pointer;
+            &:hover{
+              color: #fff;
+            }
+          }
+        }
+      }
     }
   }
 </style>

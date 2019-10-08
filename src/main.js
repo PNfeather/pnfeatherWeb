@@ -8,12 +8,15 @@ import store from './store';
 import HeaderTop from '@C/headerTop';
 import 'element-ui/lib/theme-chalk/index.css';
 import ElementUI from 'element-ui';
+import VueClipboard from 'vue-clipboard2';
 
 Vue.config.productionTip = false;
 
 Vue.use(http.install);
 
 Vue.use(ElementUI);
+
+Vue.use(VueClipboard);
 
 Vue.component(HeaderTop.name, HeaderTop);
 
