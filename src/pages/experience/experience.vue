@@ -1,7 +1,7 @@
 <template>
   <div name='experience' class="fillcontain">
     <div class="top_title">
-      <div class="title">经历</div>
+      <div class="title">时间线</div>
       <div class="download">
         <span>下载</span>
         <a href="static/files/aboutMe.doc" download="个人简历">word版</a>
@@ -9,13 +9,17 @@
       </div>
     </div>
     <div class="down_content">
-      <section class="experience-item" v-for="(item, index) in experienceList" :key="index">
+      <section class="experience-item" :class="{'activeItem': activeItem === index}" @mouseenter="changeActiveItem(index)" @mouseover="changeActiveItem(index)" @mouseleave="changeActiveItem(-1)" v-for="(item, index) in experienceList" :key="index">
         <div class="time" @click="changeShow(item)">
           <span class="time_time">2014/9-2016/4</span>
           <span class="time_icon_line">
-          <i v-show="item.showDetail" class="iconfont iconUp"></i>
-          <i v-show="!item.showDetail" class="iconfont iconDown"></i>
-        </span>
+            <i v-show="item.showDetail" class="iconfont iconUp"></i>
+            <i v-show="!item.showDetail" class="iconfont iconDown"></i>
+          </span>
+          <span class="funBtn" @click.stop>
+            <i v-show="activeItem === index" class="iconfont iconEdit" @click.stop="editItem(item)"></i>
+            <i v-show="activeItem === index" class="iconfont iconDelete" @click.stop="deleteItem(item)"></i>
+          </span>
         </div>
         <div class="border">
           <transition name="form-fade" mode="in-out">
@@ -48,6 +52,7 @@
     name: 'experience',
     data () {
       return {
+        activeItem: -1,
         experienceList: [
           {showDetail: true},
           {showDetail: true}
@@ -61,6 +66,15 @@
     methods: {
       changeShow (item) {
         this.$set(item, 'showDetail', !item.showDetail);
+      },
+      changeActiveItem (index) {
+        this.activeItem = index;
+      },
+      editItem (item) {
+        console.log('编辑');
+      },
+      deleteItem (item) {
+        console.log('删除');
       }
     },
     components: {}
@@ -72,6 +86,7 @@
     display: flex;
     flex-direction: column;
     .top_title{
+      margin-bottom: .5rem;
       .title{
         text-align: center;
         border-bottom: 1px solid #333;
@@ -79,6 +94,9 @@
       .download{
         font-size: .4rem;
         text-align: center;
+        a{
+          margin: 0 .3rem;
+        }
         span{
           color: #666;
         }
@@ -90,6 +108,9 @@
       pre{
         margin: 0;
       }
+      .activeItem{
+        background: rgba(255, 255, 255, 0.2);
+      }
       .experience-item{
         font-size: .6rem;
         padding: .5rem;
@@ -99,7 +120,6 @@
           display: flex;
           justify-content: flex-start;
           cursor: pointer;
-          padding-right: 5rem;
           .time_time{
             margin-right: .3rem;
           }
@@ -119,6 +139,20 @@
               left: 0;
               top: 50%;
               background: #fff;
+            }
+          }
+          .funBtn{
+            width: 3rem;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: .4rem;
+            .iconfont{
+              font-size: .8rem;
+              color: @purple;
+              margin-left: .7rem;
+              &:hover{
+                color: @red;
+              }
             }
           }
         }
