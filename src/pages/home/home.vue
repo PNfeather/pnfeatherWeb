@@ -38,10 +38,11 @@
 <style scoped lang="less">
   @import '~@/style/mixin';
   [name = 'home']{
-    background: url("~@IMG/china-background2.png") center no-repeat;
+    background: url("~@IMG/china-background1.png") center no-repeat;
     background-size: cover;
     background-color: #222;
     padding-top: .8rem;
+    box-sizing: border-box;
     .main_content{
       color: #222;
       overflow: hidden;
@@ -49,9 +50,7 @@
       min-height: 550px;
       margin: .8rem auto;
       .main_content_border{
-        background: url("~@IMG/background-home.png") center no-repeat;
-        background-size: cover;
-        background-color: #B8915E;
+        background: rgba(255, 255, 255, 0.2);
         .wh(100%, 100%);
         padding: .4rem;
         border-radius: .3rem;
