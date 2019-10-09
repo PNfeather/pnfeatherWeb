@@ -1,7 +1,7 @@
 <template>
   <div name='experience' class="fillcontain">
     <div class="top_title">
-      <div class="title">时间线</div>
+      <div class="title">时间线<i @click="openAddModal" class="iconfont iconAdd"></i></div>
       <div class="download">
         <span>下载</span>
         <a href="static/files/aboutMe.doc" download="个人简历">word版</a>
@@ -17,8 +17,10 @@
             <i v-show="!item.showDetail" class="iconfont iconDown"></i>
           </span>
           <span class="funBtn" @click.stop>
-            <i v-show="activeItem === index" class="iconfont iconEdit" @click.stop="editItem(item)"></i>
-            <i v-show="activeItem === index" class="iconfont iconDelete" @click.stop="deleteItem(item)"></i>
+            <span class="border" v-show="activeItem === index">
+              <i class="iconfont iconEdit" @click.stop="editItem(item)"></i>
+              <i class="iconfont iconDelete" @click.stop="deleteItem(item)"></i>
+            </span>
           </span>
         </div>
         <div class="border">
@@ -44,6 +46,48 @@
         </div>
       </section>
     </div>
+    <el-dialog
+      title="新赠时间线"
+      :visible.sync="experienceToggle"
+      width="70%"
+      center>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="时间定位">
+          <el-col :span="11">
+            <el-date-picker type="date" placeholder="开始时间" v-model="form.startTime" style="width: 100%;"></el-date-picker>
+          </el-col>
+          <el-col :span="2" style="text-align: center">-</el-col>
+          <el-col :span="11">
+            <el-date-picker type="date" placeholder="结束时间" v-model="form.endTime" style="width: 100%;"></el-date-picker>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="单位名称">
+          <el-input v-model="form.company" placeholder="请输入单位名称"></el-input>
+        </el-form-item>
+        <el-form-item label="单位涉及">
+          <el-input v-model="form.companyContent" placeholder="请输入单位涉及"></el-input>
+        </el-form-item>
+        <el-form-item label="人员配置">
+          <el-input v-model="form.companyPersons" placeholder="请输入人员配置"></el-input>
+        </el-form-item>
+        <el-form-item label="单位性质">
+          <el-input v-model="form.companyNature" placeholder="请输入单位性质"></el-input>
+        </el-form-item>
+        <el-form-item label="所属部门">
+          <el-input v-model="form.department" placeholder="请输入所属部门"></el-input>
+        </el-form-item>
+        <el-form-item label="职位名称">
+          <el-input v-model="form.position" placeholder="请输入职位名称"></el-input>
+        </el-form-item>
+        <el-form-item label="工作描述">
+          <el-input type="textarea" v-model="form.desc" placeholder="请输入工作描述"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">确认{{isAddExperience ? '添加' : '修改'}}</el-button>
+          <el-button @click="experienceToggle = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -52,6 +96,19 @@
     name: 'experience',
     data () {
       return {
+        experienceToggle: false,
+        isAddExperience: true,
+        form: {
+          startTime: '',
+          endTime: '',
+          company: '',
+          companyContent: '',
+          companyPersons: '',
+          companyNature: '',
+          department: '',
+          position: '',
+          desc: ''
+        },
         activeItem: -1,
         experienceList: [
           {showDetail: true},
@@ -70,11 +127,17 @@
       changeActiveItem (index) {
         this.activeItem = index;
       },
+      openAddModal () {
+        this.experienceToggle = true;
+      },
       editItem (item) {
         console.log('编辑');
       },
       deleteItem (item) {
         console.log('删除');
+      },
+      onSubmit () {
+        console.log('提交');
       }
     },
     components: {}
@@ -90,6 +153,19 @@
       .title{
         text-align: center;
         border-bottom: 1px solid #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        .iconfont{
+          font-size: 1rem;
+          position: absolute;
+          right: 1rem;
+          color: @purple;
+          &:hover{
+            color: @red;
+          }
+        }
       }
       .download{
         font-size: .4rem;
@@ -143,15 +219,18 @@
           }
           .funBtn{
             width: 3rem;
-            display: flex;
-            justify-content: flex-end;
-            padding-right: .4rem;
-            .iconfont{
-              font-size: .8rem;
-              color: @purple;
-              margin-left: .7rem;
-              &:hover{
-                color: @red;
+            .border{
+              width: 100%;
+              display: flex;
+              justify-content: flex-end;
+              padding-right: .4rem;
+              .iconfont{
+                font-size: .8rem;
+                color: @purple;
+                margin-left: .7rem;
+                &:hover{
+                  color: @red;
+                }
               }
             }
           }
