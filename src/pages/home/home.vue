@@ -43,11 +43,12 @@
     background-color: #222;
     padding-top: .8rem;
     box-sizing: border-box;
+    overflow: auto;
     .main_content{
       color: #222;
       overflow: hidden;
       .wh(28rem, 78%);
-      min-height: 550px;
+      min-height: 19rem;
       margin: .8rem auto;
       .main_content_border{
         background: rgba(255, 255, 255, 0.2);

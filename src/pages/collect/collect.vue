@@ -138,8 +138,12 @@
       this.pageInit();
     },
     watch: {
-      keyWord () {
-        this.changeKeyWord();
+      keyWord (val) {
+        if (val === 'pnfeather') {
+          this.$router.push({path: 'login', query: {autoBack: true, secretTunnel: true}});
+        } else {
+          this.changeKeyWord();
+        }
       },
       isAddCollection (val) { // 从编辑改到添加时清空form
         if (val) {

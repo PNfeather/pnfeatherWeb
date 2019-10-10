@@ -3,7 +3,7 @@
     <transition name="form-fade" mode="in-out">
       <section class="form_contianer" v-show="showLogin">
         <div class="manage_tip">
-          <p>PNfeahter</p>
+          <p>角色切换</p>
         </div>
         <el-form :model="loginForm" :rules="rules" ref="loginForm">
           <el-form-item prop="username">
@@ -13,7 +13,7 @@
             <el-input type="password" placeholder="密码" v-model="loginForm.password" ref="pwd" @keyup.13.native="pwdKeyDown($event)"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm()" class="submit_btn">登录</el-button>
+            <el-button type="primary" @click="submitForm()" class="submit_btn">切换</el-button>
           </el-form-item>
         </el-form>
       </section>
@@ -46,6 +46,7 @@
     },
     mounted () {
       this.showLogin = true;
+      !this.$route.query.secretTunnel && this.submitForm();
     },
     methods: {
       usernameKeyDown () {

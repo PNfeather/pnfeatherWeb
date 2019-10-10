@@ -1,6 +1,6 @@
 <template>
   <div name='headerTop'>
-    <div class="header_item" :class="{header_item_active: isActive(item.clickMethod)}" @click="redirect(item.clickMethod)" v-for="item in list" :key="item.id">{{item.value}}</div>
+    <div class="header_item" :class="{header_item_active: isActive(item.clickMethod)}" @click="redirect(item.clickMethod)" v-for="item in list" :key="item.id" v-show="!item.hidden">{{item.value}}</div>
   </div>
 </template>
 
@@ -25,7 +25,8 @@
             clickMethod: 'jump-collect'
           }, {
             id: '4',
-            value: '登出',
+            value: '切换',
+            hidden: true,
             clickMethod: 'logout'
           }
         ]
