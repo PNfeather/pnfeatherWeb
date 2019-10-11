@@ -47,8 +47,11 @@
             <el-date-picker type="date" placeholder="开始时间" v-model="form.startTime" style="width: 100%;"></el-date-picker>
           </el-col>
           <el-col :span="2" style="text-align: center">-</el-col>
-          <el-col :span="11">
+          <el-col :span="11" v-if="form.endTime !== '至今'">
             <el-date-picker type="date" placeholder="结束时间" v-model="form.endTime" style="width: 100%;"></el-date-picker>
+          </el-col>
+          <el-col :span="11" v-if="form.endTime === '至今'">
+            <el-input v-model="form.endTime" clearable></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="单位名称">
@@ -114,10 +117,22 @@
         return (this.$store.getters.userLevel === '1');
       }
     },
-    watch: {},
+    watch: {
+      'form.endTime' (val) {
+        const pickTime = new Date(val);
+        const nowTime = new Date();
+        if (format(pickTime, 'YYYY-MM-DD') === format(nowTime, 'YYYY-MM-DD') || pickTime.getTime() > nowTime.getTime()) {
+          this.form.endTime = '至今';
+        }
+      }
+    },
     filters: {
       changeTime (val) {
-        return format(new Date(val), 'YYYY/MM');
+        if (val !== '至今') {
+          return format(new Date(val), 'YYYY/MM');
+        } else {
+          return val;
+        }
       }
     },
     methods: {
@@ -128,33 +143,6 @@
         this.activeItem = index;
       },
       openAddModal () {
-        // Object.assign(this.form, { // todo 待删除
-        //   startTime: '2014-9-1',
-        //   endTime: '2016-4-1',
-        //   company: '中国建筑第五工程局有限公司',
-        //   companyContent: '建筑/建材/工程',
-        //   companyPersons: '10000人以上',
-        //   companyNature: '国企',
-        //   department: '工程部',
-        //   position: '建筑工程师',
-        //   desc: '工作内容：\n' +
-        //     '\n' +
-        //     '1、监督管理楼栋施工进度及施工质量；\n' +
-        //     '\n' +
-        //     '2、协调各工种之间的配合；\n' +
-        //     '\n' +
-        //     '3、楼栋工人的人员调配；\n' +
-        //     '\n' +
-        //     '4、根据楼栋工作安排工长嵌入施工时间；\n' +
-        //     '\n' +
-        //     '个人成长：\n' +
-        //     '\n' +
-        //     '1、合理安排工作时间及工作流程；\n' +
-        //     '\n' +
-        //     '2、善于沟通，知道如何才能有效的安排包工头手下工人去不抗拒的工作；\n' +
-        //     '\n' +
-        //     '3、韧性变得极强，懂进退'
-        // });
         this.isAddExperience = true;
         this.experienceToggle = true;
       },
@@ -255,6 +243,7 @@
           position: absolute;
           right: 1rem;
           color: @purple;
+          cursor: pointer;
           &:hover{
             color: @red;
           }
