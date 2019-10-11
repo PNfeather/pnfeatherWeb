@@ -24,7 +24,15 @@ const resizeHandler = () => {
   let html = document.documentElement;
   let clientWidth = html.clientWidth;
   let size = 50 * clientWidth / 1920;
-  html.style.fontSize = (size >= 30 ? size : 30) + 'px';
+  let result;
+  if (size < 30) {
+    result = 30;
+  } else if (size <= 36) {
+    result = size;
+  } else {
+    result = 36;
+  }
+  html.style.fontSize = result + 'px';
 };
 
 window.addEventListener('resize', resizeHandler);
