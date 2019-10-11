@@ -50,13 +50,12 @@
     padding-top: .8rem;
     box-sizing: border-box;
     overflow: auto;
-    position: relative;
     .main_content{
       color: #222;
       overflow: hidden;
       .wh(28rem, 78%);
-      min-height: 19rem;
-      margin: .8rem auto 120px;
+      min-height: 600px;
+      margin: .8rem auto 80px;
       .main_content_border{
         background: rgba(255, 255, 255, 0.2);
         .wh(100%, 100%);
@@ -72,10 +71,9 @@
       }
     }
     .footer{
-      padding: 5px 0;
-      position: absolute;
+      position: fixed;
       bottom: 0;
-      left: 0;
+      padding: 5px 0;
       .wh(100%, 60px);
       box-sizing: border-box;
       font-size: 16px;
