@@ -1,7 +1,7 @@
 <template>
   <div name='experience' class="fillcontain">
     <div class="top_title">
-      <div class="title">时间线<i @click="openAddModal" class="iconfont iconAdd"></i></div>
+      <div class="title">时间线<i @click="openAddModal" v-show="isManager" class="iconfont iconAdd"></i></div>
       <div class="download">
         <span>下载</span>
         <a href="static/files/aboutMe.doc" download="个人简历">word版</a>
@@ -11,37 +11,27 @@
     <div class="down_content">
       <section class="experience-item" :class="{'activeItem': activeItem === index}" @mouseenter="changeActiveItem(index)" @mouseover="changeActiveItem(index)" @mouseleave="changeActiveItem(-1)" v-for="(item, index) in experienceList" :key="index">
         <div class="time" @click="changeShow(item)">
-          <span class="time_time">2014/9-2016/4</span>
+          <span class="time_time">{{item.startTime | changeTime}}-{{item.endTime | changeTime}}</span>
           <span class="time_icon_line">
             <i v-show="item.showDetail" class="iconfont iconUp"></i>
             <i v-show="!item.showDetail" class="iconfont iconDown"></i>
           </span>
           <span class="funBtn" @click.stop>
-            <span class="border" v-show="activeItem === index">
+            <span class="border" v-show="activeItem === index && isManager">
               <i class="iconfont iconEdit" @click.stop="editItem(item)"></i>
-              <i class="iconfont iconDelete" @click.stop="deleteItem(item)"></i>
+              <i class="iconfont iconDelete" @click.stop="deleteItem(item, index)"></i>
             </span>
           </span>
         </div>
         <div class="border">
           <transition name="form-fade" mode="in-out">
             <div class="detail" v-show="item.showDetail">
-              <div class="company">单位：中国建筑第五工程局有限公司</div>
-              <div class="introduce">建筑/建材/工程 | 10000人以上 | 国企 | 工程部</div>
-              <div class="position">职位：建筑工程师</div>
+              <div class="company">单位：{{item.company}}</div>
+              <div class="introduce">{{item.companyContent}} | {{item.companyPersons}} | {{item.companyNature}} | {{item.department}}</div>
+              <div class="position">职位：{{item.position}}</div>
               <div class="sub-title">工作描述:</div>
-              <pre class="sub-content">
-        工作内容：
-        1、监督管理楼栋施工进度及施工质量；
-        2、协调各工种之间的配合；
-        3、楼栋工人的人员调配；
-        4、根据楼栋工作安排工长嵌入施工时间；
-        个人成长：
-        1、合理安排工作时间及工作流程；
-        2、善于沟通，知道如何才能有效的安排包工头手下工人去不抗拒的工作；
-        3、韧性变得极强，懂进退
-            </pre>
-            </div>
+              <div class="sub-content" v-html="item.desc"></div>
+              </div>
           </transition>
         </div>
       </section>
@@ -92,6 +82,8 @@
 </template>
 
 <script type='text/babel'>
+  import { addExperience, editExperience, getExperienceList, deleteExperience } from '@/api/experience';
+  import format from '@/tools/format';
   export default {
     name: 'experience',
     data () {
@@ -110,16 +102,24 @@
           desc: ''
         },
         activeItem: -1,
-        experienceList: [
-          {showDetail: true},
-          {showDetail: true}
-        ]
+        experienceList: []
       };
     },
-    created () {},
+    created () {
+      this.getExperienceList();
+    },
     mounted () {},
-    computed: {},
+    computed: {
+      isManager () {
+        return (this.$store.getters.userLevel === '1');
+      }
+    },
     watch: {},
+    filters: {
+      changeTime (val) {
+        return format(new Date(val), 'YYYY/MM');
+      }
+    },
     methods: {
       changeShow (item) {
         this.$set(item, 'showDetail', !item.showDetail);
@@ -128,16 +128,109 @@
         this.activeItem = index;
       },
       openAddModal () {
+        // Object.assign(this.form, { // todo 待删除
+        //   startTime: '2014-9-1',
+        //   endTime: '2016-4-1',
+        //   company: '中国建筑第五工程局有限公司',
+        //   companyContent: '建筑/建材/工程',
+        //   companyPersons: '10000人以上',
+        //   companyNature: '国企',
+        //   department: '工程部',
+        //   position: '建筑工程师',
+        //   desc: '工作内容：\n' +
+        //     '\n' +
+        //     '1、监督管理楼栋施工进度及施工质量；\n' +
+        //     '\n' +
+        //     '2、协调各工种之间的配合；\n' +
+        //     '\n' +
+        //     '3、楼栋工人的人员调配；\n' +
+        //     '\n' +
+        //     '4、根据楼栋工作安排工长嵌入施工时间；\n' +
+        //     '\n' +
+        //     '个人成长：\n' +
+        //     '\n' +
+        //     '1、合理安排工作时间及工作流程；\n' +
+        //     '\n' +
+        //     '2、善于沟通，知道如何才能有效的安排包工头手下工人去不抗拒的工作；\n' +
+        //     '\n' +
+        //     '3、韧性变得极强，懂进退'
+        // });
+        this.isAddExperience = true;
         this.experienceToggle = true;
       },
-      editItem (item) {
-        console.log('编辑');
+      getExperienceList () {
+        getExperienceList().then(res => {
+          let data = res.data;
+          if (data.code == 0) {
+            let reData = data.data;
+            this.experienceList = [...reData.map((item, index) => {
+              index === 0 && (item.showDetail = true);
+              return item;
+            })] || [];
+          } else {
+            this.$message.error(data.msg);
+          }
+        }).catch((err) => {
+          this.$message.error(err);
+        });
       },
-      deleteItem (item) {
-        console.log('删除');
+      resetForm () {
+        Object.assign(this.form, {
+          startTime: '',
+          endTime: '',
+          company: '',
+          companyContent: '',
+          companyPersons: '',
+          companyNature: '',
+          department: '',
+          position: '',
+          desc: ''
+        });
+      },
+      editItem (item) {
+        this.isAddExperience = false;
+        this.experienceToggle = true;
+        let keys = Object.keys(this.form);
+        for (let i in keys) {
+          this.form[keys[i]] = item[keys[i]];
+        }
+        this.form._id = item._id;
+      },
+      deleteItem (item, index) {
+        this.$confirm('是否确认本条经历', '确认信息').then(() => {
+          this.experienceList.splice(index, 1);
+          deleteExperience({id: item._id}).then(res => {
+            let data = res.data;
+            if (data.code == 0) {
+              this.$message.success(data.msg);
+            } else {
+              this.$message.error(data.msg);
+            }
+          }).catch((err) => {
+            this.$message.error(err);
+          });
+        });
       },
       onSubmit () {
-        console.log('提交');
+        let changeFun;
+        if (this.isAddExperience) {
+          changeFun = addExperience;
+        } else {
+          changeFun = editExperience;
+        }
+        changeFun(this.form).then(res => {
+          let data = res.data;
+          if (data.code == 0) {
+            this.experienceToggle = false;
+            this.resetForm();
+            this.$message.success(data.msg);
+            this.getExperienceList();
+          } else {
+            this.$message.error(data.msg);
+          }
+        }).catch((err) => {
+          this.$message.error(err);
+        });
       }
     },
     components: {}
@@ -249,6 +342,8 @@
         .sub-content{
           font-size: .5rem;
           color: #666;
+          padding-left: 1.8rem;
+          white-space: pre-line;
         }
       }
       .form-fade-enter-active, .form-fade-leave-active {

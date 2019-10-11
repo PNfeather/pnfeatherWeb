@@ -28,10 +28,10 @@
     data () {
       return {
         loginForm: {
-          username: 'PNfeather',
-          password: 'abcdef'
-          // username: 'visitor',
-          // password: '123456'
+          // username: 'PNfeather',
+          // password: 'abcdef'
+          username: 'visitor',
+          password: '123456'
         },
         rules: {
           username: [
