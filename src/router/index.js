@@ -8,6 +8,7 @@ const home = r => require.ensure([], () => r(require('@P/home/home')), 'home');
 const homeContent = r => require.ensure([], () => r(require('@P/homeContent/homeContent')), 'homeContent');
 const experience = r => require.ensure([], () => r(require('@P/experience/experience')), 'experience');
 const collect = r => require.ensure([], () => r(require('@P/collect/collect')), 'collect');
+const about = r => require.ensure([], () => r(require('@P/about/about')), 'about');
 
 const routes = [
   {
@@ -30,6 +31,9 @@ const routes = [
       }, {
         path: '/collect',
         component: collect
+      }, {
+        path: '/about',
+        component: about
       }
     ]
   }

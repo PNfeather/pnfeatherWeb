@@ -1,6 +1,6 @@
 <template>
   <div name='headerTop'>
-    <div class="header_item" :class="{header_item_active: isActive(item.clickMethod)}" @click="redirect(item.clickMethod)" v-for="item in list" :key="item.id" v-show="!item.hidden">{{item.value}}</div>
+    <div class="header_item" :class="{header_item_active: isActive(item.clickMethod)}" @click="redirect(item.clickMethod)" v-for="item in list" :key="item.id" v-show="!item.hidden || isManager">{{item.value}}</div>
   </div>
 </template>
 
@@ -25,6 +25,10 @@
             clickMethod: 'jump-collect'
           }, {
             id: '4',
+            value: '关于',
+            clickMethod: 'jump-about'
+          }, {
+            id: '5',
             value: '切换',
             hidden: true,
             clickMethod: 'logout'
@@ -44,6 +48,9 @@
           }
           return active;
         };
+      },
+      isManager () {
+        return (this.$store.getters.userLevel === '1');
       }
     },
     methods: {
