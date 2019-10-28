@@ -9,12 +9,16 @@ import HeaderTop from '@C/headerTop';
 import 'element-ui/lib/theme-chalk/index.css';
 import ElementUI from 'element-ui';
 import VueClipboard from 'vue-clipboard2';
+import mavonEditor from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
 
 Vue.config.productionTip = false;
 
 Vue.use(http.install);
 
 Vue.use(ElementUI);
+
+Vue.use(mavonEditor);
 
 Vue.use(VueClipboard);
 
