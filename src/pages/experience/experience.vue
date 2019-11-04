@@ -151,8 +151,8 @@
           let data = res.data;
           if (data.code == 0) {
             let reData = data.data;
-            this.experienceList = [...reData.map((item, index) => {
-              index === 0 && (item.showDetail = true);
+            this.experienceList = [...reData.map(item => {
+              item.showDetail === undefined && (item.showDetail = true);
               return item;
             })] || [];
           } else {

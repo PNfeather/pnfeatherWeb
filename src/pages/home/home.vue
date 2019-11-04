@@ -13,10 +13,13 @@
       </transition>
     </section>
     <footer class="footer">
-      <p>Copyright © 2019 PNfeather-info by PNfeather</p>
-      <p>
-        <a href="http://www.beian.miit.gov.cn">湘ICP备19020287号</a>. All rights reserved.
-      </p>
+      <div v-show="showFooter">
+        <p @click="handleFooter">Copyright © 2019 PNfeather-info by PNfeather</p>
+        <p>
+          <a href="http://www.beian.miit.gov.cn">湘ICP备19020287号</a>. All rights reserved.
+        </p>
+      </div>
+      <p v-show="!showFooter" @click="handleFooter">显示网站备案</p>
     </footer>
   </div>
 </template>
@@ -25,7 +28,8 @@
   export default {
     data () {
       return {
-        showContent: false
+        showContent: false,
+        showFooter: true
       };
     },
     watch: {
@@ -38,6 +42,11 @@
     },
     mounted () {
       this.showContent = true;
+    },
+    methods: {
+      handleFooter () {
+        this.$store.getters.userLevel === '1' && (this.showFooter = !this.showFooter);
+      }
     }
   };
 </script>
@@ -54,7 +63,7 @@
       color: #222;
       overflow: hidden;
       .wh(28rem, 78%);
-      min-height: 600px;
+      min-height: 500px;
       margin: .8rem auto 80px;
       .main_content_border{
         background: rgba(255, 255, 255, 0.2);
@@ -74,7 +83,7 @@
       position: fixed;
       bottom: 0;
       padding: 5px 0;
-      .wh(100%, 60px);
+      width: 100%;
       box-sizing: border-box;
       font-size: 16px;
       text-align: center;
