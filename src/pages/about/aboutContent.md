@@ -15,7 +15,7 @@
 
 ### 前端
 
-1.前端核心[Vue2.0](https://cn.vuejs.org/)全家桶(vue-cli+vue+vue-router+vuex+axios+es6+less+[element-ui](https://element.eleme.cn/#/zh-CN/))。另外项目还用到[vue-clipboard2](https://www.npmjs.com/package/vue-clipboard2)用作首页中微信、qq的快速复制，[better-scroll](http://ustbhuangyi.github.io/better-scroll/doc/api.html)用作收藏页面的定位滚动，[lodash](https://www.lodashjs.com/)用作快速便捷的处理数据。
+1.前端核心[Vue2.0](https://cn.vuejs.org/)全家桶(vue-cli+vue+vue-router+vuex+axios+es6+less+[element-ui](https://element.eleme.cn/#/zh-CN/))。另外项目还用到[vue-clipboard2](https://www.npmjs.com/package/vue-clipboard2)用作首页中微信、qq的快速复制，[better-scroll](http://ustbhuangyi.github.io/better-scroll/doc/api.html)用作收藏页面的定位滚动，[lodash](https://www.lodashjs.com/)用作快速便捷的处理数据；
 
 2.vue-cli搭建项目前端基本框架；
 
@@ -25,17 +25,17 @@
 
 5.项目主体内容部分采用vue-router二级路由配置实现跳转，以保持网站主框UI的一致性，路由组件通过require.ensure方式按需引入，通过keep-alive缓存页面数据，防止切换频繁而产生的额外数据请求；
 
-6.项目通过vuex配合localStorage来控制操作权限，1级权限可以对经历、收藏页面数据进行增删改查，而2级权限只能查。原权限是通过前置登录页获取，根据规定网站不能使用前置登录页，故调整登录页为角色切换页，网站默认2级权限进入，在收藏页筛选输入框中'pnfeather'可跳转到权限切换页(防止个人资料数据被改乱了，1级权限不对外开放)。
+6.项目通过vuex配合localStorage来控制操作权限，1级权限可以对经历、收藏页面数据进行增删改查，而2级权限只能查。原权限是通过前置登录页获取，根据规定网站不能使用前置登录页，故调整登录页为角色切换页，网站默认2级权限进入，在收藏页筛选输入框中'pnfeather'可跳转到权限切换页(防止个人资料数据被改乱了，1级权限不对外开放)；
 
-7.项目通过[cross-env](https://www.npmjs.com/package/cross-env)来控制项目开发、线上打包控制。
+7.项目通过[cross-env](https://www.npmjs.com/package/cross-env)来控制项目开发、线上打包控制；
 
-8.项目统一化配置axios默认配置文件，通过process.env切换不同环境接口请求的基本路径，通过axios请求拦截功能队列化接口请求，并移除队列中通请求，防止短时间内多次请求同接口。配置文件默认输出一个install对象，在项目入口文件通过Vue.use挂载到Vue的原型链上，这样在项目其他位置可以方便使用。
+8.项目统一化配置axios默认配置文件，通过process.env切换不同环境接口请求的基本路径，通过axios请求拦截功能队列化接口请求，并移除队列中通请求，防止短时间内多次请求同接口。配置文件默认输出一个install对象，在项目入口文件通过Vue.use挂载到Vue的原型链上，这样在项目其他位置可以方便使用；
 
 9.项目使用es6 Promise及es7 async/await来控制控制数据的异步；使用es6函数语法防止this指向变动；首页使用es6 class创建公共方法达成首页打字输出效果。
 
 ### 后端
 
-1.后端核心[node](http://nodejs.cn/)、[express](http://www.expressjs.com.cn/)、[express-generator](http://www.expressjs.com.cn/starter/generator.html)、[mongodb](https://docs.mongodb.com/)
+1.后端核心[node](http://nodejs.cn/)、[express](http://www.expressjs.com.cn/)、[express-generator](http://www.expressjs.com.cn/starter/generator.html)、[mongodb](https://docs.mongodb.com/)；
 。
 
 2.express-generator搭建项目后端基本框架；
@@ -74,6 +74,6 @@
 
 ## 网站未来设想
 
-1.内容方面，根据笔者自身经历以及网路足印，实时动态更新。
+1.内容方面，根据笔者自身经历以及网路足印，实时动态更新；
 
 2.部署方面，包括使用`docker实现项目镜像化管理`，使用`jenkins实现项目的一键部署`。
