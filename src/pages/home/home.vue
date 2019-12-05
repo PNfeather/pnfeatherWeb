@@ -16,7 +16,7 @@
       <div v-show="showFooter">
         <p @click="handleFooter">Copyright © 2019 PNfeather-info by PNfeather</p>
         <p>
-          <a href="http://www.beian.miit.gov.cn">湘ICP备19020287号</a>. All rights reserved.
+          <a href="http://www.beian.miit.gov.cn">湘ICP备19020287号-1</a>. All rights reserved.
         </p>
       </div>
       <p v-show="!showFooter" @click="handleFooter">显示网站备案</p>
