@@ -1,6 +1,15 @@
 <template>
   <div name='chartPage' class='fillcontain'>
-    <section class='chartPick'></section>
+    <section class='chartPick'>
+      <div class="title-text"><span class="red">*</span>Chart Type</div>
+      <div class="pic-list">
+
+      </div>
+      <div class="title-text">Line Chart</div>
+      <div class="title-text">Histogram</div>
+      <div class="title-text">Pie Chart</div>
+      <div class="title-text">Pivot Table</div>
+    </section>
     <section class='chartView'>
       <el-form>
         <el-form-item label='Data Source' label-width='120px'>
@@ -23,7 +32,7 @@
 </template>
 
 <script type='text/babel'>
-  import XLSX from 'xlsx';
+  import { file2Xce, formatExcelTime } from './common/method';
   export default {
     name: 'chartPage',
     data () {
@@ -53,30 +62,15 @@
           return this.$message.error('格式错误！请重新选择');
         }
         this.fileList.push(file);
-        this.file2Xce(file).then(tabJson => {
+        file2Xce(file).then(tabJson => {
           if (tabJson && tabJson.length > 0) {
             this.dataList = [...tabJson[0].sheet];
+            this.dataList.map(item => {
+              item.DATE = formatExcelTime(item.DATE);
+              return item;
+            });
+            console.log(this.dataList);
           }
-        });
-      },
-      file2Xce (file) {
-        return new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = e => {
-            const data = e.target.result;
-            let wb = XLSX.read(data, {
-              type: 'binary'
-            });
-            const result = [];
-            wb.SheetNames.forEach((sheetName) => {
-              result.push({
-                sheetName: sheetName,
-                sheet: XLSX.utils.sheet_to_json(wb.Sheets[sheetName])
-              });
-            });
-            resolve(result);
-          };
-          reader.readAsBinaryString(file.raw);
         });
       }
     },
@@ -84,6 +78,7 @@
   };
 </script>
 <style lang='less'>
+  @import '~@/style/mixin';
   [name = 'chartPage']{
     display: flex;
     position: relative;
@@ -92,6 +87,14 @@
     .chartPick{
       flex: 3.9rem 0 0;
       background: #f0f3f5;
+      padding: .4rem .2rem;
+      .title-text{
+        font-size: .1rem;
+        line-height: .7rem;
+        .red{
+          color: red;
+        }
+      }
     }
     .chartView{
       flex: 1;
