@@ -42,6 +42,36 @@
     },
     mounted () {
       this.showContent = true;
+
+      const oldData = [
+        {id: 1, name: 'boss', parentId: 0},
+        {id: 2, name: 'lily', parentId: 1},
+        {id: 3, name: 'jack', parentId: 1},
+        {id: 4, name: 'john', parentId: 2},
+        {id: 5, name: 'boss2', parentId: 0}
+      ];
+
+      function listToTree (oldArr) {
+        let result = {};
+        oldArr.forEach(element => {
+          let parentId = element.parentId;
+          if (parentId !== 0) {
+            oldArr.forEach(ele => {
+              if (ele.id == parentId) {
+                if (!ele.children) {
+                  ele.children = {};
+                }
+                ele.children[element.id] = element;
+              }
+            });
+          } else {
+
+          }
+        });
+        console.log(oldArr);
+        return oldArr;
+      }
+      listToTree(oldData);
     },
     methods: {
       handleFooter () {

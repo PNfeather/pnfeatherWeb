@@ -9,7 +9,6 @@ const homeContent = r => require.ensure([], () => r(require('@P/homeContent/home
 const experience = r => require.ensure([], () => r(require('@P/experience/experience')), 'experience');
 const collect = r => require.ensure([], () => r(require('@P/collect/collect')), 'collect');
 const about = r => require.ensure([], () => r(require('@P/about/about')), 'about');
-const chartPage = r => require.ensure([], () => r(require('@P/chartPage/chartPage')), 'chartPage');
 
 const routes = [
   {
@@ -21,9 +20,6 @@ const routes = [
     component: login
   },
   {
-    path: '/chartPage',
-    component: chartPage
-  }, {
     path: '/',
     component: home,
     children: [
